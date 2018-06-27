@@ -2,3 +2,4 @@
 # Licensed under the MIT license
 
 from .builtins import BuiltinsTest
+from .itertools import ItertoolsTest
