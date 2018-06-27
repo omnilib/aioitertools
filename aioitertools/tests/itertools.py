@@ -12,7 +12,6 @@ slist = ["A", "B", "C"]
 
 
 class ItertoolsTest(TestCase):
-
     @async_test
     async def test_count_bare(self):
         counter = ait.count()
