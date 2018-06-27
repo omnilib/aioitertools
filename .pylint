@@ -133,6 +133,7 @@ disable=print-statement,
         global-statement,
         too-many-instance-attributes,
         stop-iteration-return,
+        duplicate-code,
         redefined-builtin
 
 # Enable the message, report, category or checker with the given id(s). You can

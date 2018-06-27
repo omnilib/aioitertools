@@ -17,7 +17,7 @@ import asyncio
 import operator
 from typing import AsyncIterator, Callable
 
-from .builtins import iter, list, next
+from .builtins import iter, next
 from .types import AnyIterable, AnyIterableIterable, AnyStop, T
 
 # infinite iterators

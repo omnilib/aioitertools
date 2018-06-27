@@ -1,8 +1,6 @@
 # Copyright 2018 John Reese
 # Licensed under the MIT license
 
-import asyncio
-from typing import AsyncIterator
 from unittest import TestCase
 
 import aioitertools as ait
