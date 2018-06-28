@@ -132,6 +132,7 @@ disable=print-statement,
         invalid-name,
         global-statement,
         too-many-instance-attributes,
+        too-many-public-methods,
         stop-iteration-return,
         duplicate-code,
         redefined-builtin
