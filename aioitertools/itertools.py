@@ -335,13 +335,13 @@ async def islice(itr: AnyIterable, *args: int) -> AsyncIterator[T]:
         start, stop = args
     elif len(args) == 3:
         start, stop, step = args
-    assert start >= 0 and stop >= 0 and step >= 0
+    assert start >= 0 and (stop is None or stop >= 0) and step >= 0
     step = max(1, step)
 
     async for index, item in enumerate(itr):
         if index < start:
             continue
-        if index >= stop:
+        if stop is not None and index >= stop:
             break
         if (index - start) % step != 0:
             continue

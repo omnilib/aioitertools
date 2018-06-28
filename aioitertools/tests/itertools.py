@@ -321,6 +321,14 @@ class ItertoolsTest(TestCase):
             await ait.next(it)
 
     @async_test
+    async def test_islice_range_start_step(self):
+        it = ait.islice(srange, 0, None, 2)
+        for k in [1, 3]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
     async def test_islice_range_start_stop(self):
         it = ait.islice(srange, 1, 3)
         for k in [2, 3]:
@@ -346,6 +354,20 @@ class ItertoolsTest(TestCase):
 
         it = ait.islice(gen(), 2)
         for k in [1, 2]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
+    async def test_islice_gen_start_step(self):
+        async def gen():
+            yield 1
+            yield 2
+            yield 3
+            yield 4
+
+        it = ait.islice(gen(), 1, None, 2)
+        for k in [2, 4]:
             self.assertEqual(await ait.next(it), k)
         with self.assertRaises(StopAsyncIteration):
             await ait.next(it)
