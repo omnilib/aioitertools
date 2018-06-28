@@ -47,8 +47,28 @@ you one unified, familiar interface for interacting with iterable objects:
         ...
 
 
-See [builtins.py][builtins] for full documentation.
+aioitertools emulates the entire `itertools` module, offering the same
+function signatures, but as async generators.  All functions support
+standard iterables and async iterables alike, and can take functions or
+coroutines:
 
+    from aioitertools import chain, islice
+
+    async def generator1(...):
+        yield ...
+
+    async def generator2(...):
+        yield ...
+
+    async for value in chain(generator1(), generator2()):
+        ...
+
+    async for value in islice(generator1(), 2, None, 2):
+        ...
+
+
+See [builtins.py][builtins] and [itertools.py][itertools] for full documentation
+of functions and abilities.
 
 
 License
@@ -61,3 +81,4 @@ my code is from me and not from my employer. See the `LICENSE` file for details.
 
 
 [builtins]: https://github.com/jreese/aioitertools/blob/master/aioitertools/builtins.py
+[itertools]: https://github.com/jreese/aioitertools/blob/master/aioitertools/itertools.py
