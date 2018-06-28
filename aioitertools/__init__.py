@@ -21,7 +21,11 @@ from .itertools import (
     filterfalse,
     groupby,
     islice,
+    permutations,
+    product,
     repeat,
+    starmap,
+    takewhile,
     tee,
     zip_longest,
 )

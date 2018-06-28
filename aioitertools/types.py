@@ -16,6 +16,7 @@ from typing import (
 R = TypeVar("R")
 T = TypeVar("T")
 
+AnyFunction = Union[Callable[..., R], Callable[..., Awaitable[R]]]
 AnyIterable = Union[Iterable[T], AsyncIterable[T]]
 AnyIterableIterable = Union[Iterable[AnyIterable], AsyncIterable[AnyIterable]]
 AnyIterator = Union[Iterator[T], AsyncIterator[T]]

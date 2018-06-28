@@ -152,6 +152,47 @@ class ItertoolsTest(TestCase):
             await ait.next(it)
 
     @async_test
+    async def test_count_bare(self):
+        it = ait.count()
+        for k in [0, 1, 2, 3]:
+            self.assertEqual(await ait.next(it), k)
+
+    @async_test
+    async def test_count_start(self):
+        it = ait.count(42)
+        for k in [42, 43, 44, 45]:
+            self.assertEqual(await ait.next(it), k)
+
+    @async_test
+    async def test_count_start_step(self):
+        it = ait.count(42, 3)
+        for k in [42, 45, 48, 51]:
+            self.assertEqual(await ait.next(it), k)
+
+    @async_test
+    async def test_count_negative(self):
+        it = ait.count(step=-2)
+        for k in [0, -2, -4, -6]:
+            self.assertEqual(await ait.next(it), k)
+
+    @async_test
+    async def test_cycle_list(self):
+        it = ait.cycle(slist)
+        for k in ["A", "B", "C", "A", "B", "C", "A", "B"]:
+            self.assertEqual(await ait.next(it), k)
+
+    @async_test
+    async def test_cycle_gen(self):
+        async def gen():
+            yield 1
+            yield 2
+            yield 42
+
+        it = ait.cycle(gen())
+        for k in [1, 2, 42, 1, 2, 42, 1, 2]:
+            self.assertEqual(await ait.next(it), k)
+
+    @async_test
     async def test_dropwhile_function_list(self):
         def pred(x):
             return x < 2
@@ -338,45 +379,45 @@ class ItertoolsTest(TestCase):
             await ait.next(it)
 
     @async_test
-    async def test_count_bare(self):
-        it = ait.count()
-        for k in [0, 1, 2, 3]:
+    async def test_permutations_list(self):
+        it = ait.permutations(srange, r=2)
+        for k in [(1, 2), (1, 3), (2, 1), (2, 3), (3, 1), (3, 2)]:
             self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
 
     @async_test
-    async def test_count_start(self):
-        it = ait.count(42)
-        for k in [42, 43, 44, 45]:
-            self.assertEqual(await ait.next(it), k)
-
-    @async_test
-    async def test_count_start_step(self):
-        it = ait.count(42, 3)
-        for k in [42, 45, 48, 51]:
-            self.assertEqual(await ait.next(it), k)
-
-    @async_test
-    async def test_count_negative(self):
-        it = ait.count(step=-2)
-        for k in [0, -2, -4, -6]:
-            self.assertEqual(await ait.next(it), k)
-
-    @async_test
-    async def test_cycle_list(self):
-        it = ait.cycle(slist)
-        for k in ["A", "B", "C", "A", "B", "C", "A", "B"]:
-            self.assertEqual(await ait.next(it), k)
-
-    @async_test
-    async def test_cycle_gen(self):
+    async def test_permutations_gen(self):
         async def gen():
             yield 1
             yield 2
-            yield 42
+            yield 3
 
-        it = ait.cycle(gen())
-        for k in [1, 2, 42, 1, 2, 42, 1, 2]:
+        it = ait.permutations(gen(), r=2)
+        for k in [(1, 2), (1, 3), (2, 1), (2, 3), (3, 1), (3, 2)]:
             self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
+    async def test_product_list(self):
+        it = ait.product([1, 2], [6, 7])
+        for k in [(1, 6), (1, 7), (2, 6), (2, 7)]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
+    async def test_product_gen(self):
+        async def gen(x):
+            yield x
+            yield x + 1
+
+        it = ait.product(gen(1), gen(6))
+        for k in [(1, 6), (1, 7), (2, 6), (2, 7)]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
 
     @async_test
     async def test_repeat(self):
@@ -388,6 +429,118 @@ class ItertoolsTest(TestCase):
     async def test_repeat_limit(self):
         it = ait.repeat(42, 5)
         for k in [42] * 5:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
+    async def test_starmap_function_list(self):
+        data = [slist[:2], slist[1:], slist]
+
+        def concat(*args):
+            return "".join(args)
+
+        it = ait.starmap(concat, data)
+        for k in ["AB", "BC", "ABC"]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
+    async def test_starmap_function_gen(self):
+        def gen():
+            yield slist[:2]
+            yield slist[1:]
+            yield slist
+
+        def concat(*args):
+            return "".join(args)
+
+        it = ait.starmap(concat, gen())
+        for k in ["AB", "BC", "ABC"]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
+    async def test_starmap_coroutine_list(self):
+        data = [slist[:2], slist[1:], slist]
+
+        async def concat(*args):
+            return "".join(args)
+
+        it = ait.starmap(concat, data)
+        for k in ["AB", "BC", "ABC"]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
+    async def test_starmap_coroutine_gen(self):
+        async def gen():
+            yield slist[:2]
+            yield slist[1:]
+            yield slist
+
+        async def concat(*args):
+            return "".join(args)
+
+        it = ait.starmap(concat, gen())
+        for k in ["AB", "BC", "ABC"]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
+    async def test_takewhile_function_list(self):
+        def pred(x):
+            return x < 3
+
+        it = ait.takewhile(pred, srange)
+        for k in [1, 2]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
+    async def test_takewhile_function_gen(self):
+        async def gen():
+            yield 1
+            yield 2
+            yield 3
+
+        def pred(x):
+            return x < 3
+
+        it = ait.takewhile(pred, gen())
+        for k in [1, 2]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
+    async def test_takewhile_coroutine_list(self):
+        async def pred(x):
+            return x < 3
+
+        it = ait.takewhile(pred, srange)
+        for k in [1, 2]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
+    async def test_takewhile_coroutine_gen(self):
+        def gen():
+            yield 1
+            yield 2
+            yield 3
+
+        async def pred(x):
+            return x < 3
+
+        it = ait.takewhile(pred, gen())
+        for k in [1, 2]:
             self.assertEqual(await ait.next(it), k)
         with self.assertRaises(StopAsyncIteration):
             await ait.next(it)

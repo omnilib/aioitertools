@@ -22,11 +22,13 @@ from typing import Any, AsyncIterator, List, Optional, Sequence, Tuple
 from .builtins import enumerate, iter, list, next, zip
 from .types import (
     Accumulator,
+    AnyFunction,
     AnyIterable,
     AnyIterableIterable,
     AnyStop,
     KeyFunction,
     Predicate,
+    R,
     T,
 )
 
@@ -96,7 +98,7 @@ class Chain:
 chain = Chain()
 
 
-async def combinations(itr: AnyIterable, r: int) -> AsyncIterator[T]:
+async def combinations(itr: AnyIterable, r: int) -> AsyncIterator[Sequence[T]]:
     """
     Yield r length subsequences from the given iterable.
 
@@ -114,7 +116,9 @@ async def combinations(itr: AnyIterable, r: int) -> AsyncIterator[T]:
         yield value
 
 
-async def combinations_with_replacement(itr: AnyIterable, r: int) -> AsyncIterator[T]:
+async def combinations_with_replacement(
+    itr: AnyIterable, r: int
+) -> AsyncIterator[Sequence[T]]:
     """
     Yield r length subsequences from the given iterable with replacement.
 
@@ -344,6 +348,47 @@ async def islice(itr: AnyIterable, *args: int) -> AsyncIterator[T]:
         yield item
 
 
+async def permutations(itr: AnyIterable, r: int = None) -> AsyncIterator[Sequence[T]]:
+    """
+    Yield r length permutations of elements in the iterable.
+
+    Simple wrapper around itertools.combinations for asyncio.
+    This will consume the entire iterable before yielding values.
+
+    Example:
+
+        async for value in permutations(range(3)):
+            ...  # (0, 1, 2), (0, 2, 1), (1, 0, 2), ...
+
+    """
+    pool: List[T] = await list(itr)
+    for value in itertools.permutations(pool, r):
+        yield value
+
+
+async def product(
+    *itrs: AnyIterable, repeat: int = 1  # pylint: disable=redefined-outer-name
+) -> AsyncIterator[Sequence[T]]:
+    """
+    Yield cartesian products of all iterables.
+
+    Simple wrapper around itertools.combinations for asyncio.
+    This will consume all iterables before yielding any values.
+
+    Example:
+
+        async for value in product("abc", "xy"):
+            ...  # ("a", "x"), ("a", "y"), ("b", "x"), ...
+
+        async for value in product(range(3), repeat=3):
+            ...  # (0, 0, 0), (0, 0, 1), (0, 0, 2), ...
+
+    """
+    pools = await asyncio.gather(*[list(itr) for itr in itrs])
+    for value in itertools.product(*pools, repeat=repeat):
+        yield value
+
+
 async def repeat(elem: T, n: int = -1) -> AsyncIterator[T]:
     """
     Yield the given value repeatedly, forever or up to n times.
@@ -359,6 +404,60 @@ async def repeat(elem: T, n: int = -1) -> AsyncIterator[T]:
             break
         yield elem
         n -= 1
+
+
+async def starmap(fn: AnyFunction, iterable: AnyIterableIterable) -> AsyncIterator[R]:
+    """
+    Yield values from a function using an iterable of iterables for arguments.
+
+    Each iterable contained within will be unpacked and consumed before
+    executing the function or coroutine.
+
+    Example:
+
+        data = [(1, 1), (1, 1, 1), (2, 2)]
+
+        async for value in starmap(operator.add, data):
+            ...  # 2, 3, 4
+
+    """
+    if asyncio.iscoroutinefunction(fn):
+        async for itr in iter(iterable):
+            args = await list(itr)
+            yield await fn(*args)
+    else:
+        async for itr in iter(iterable):
+            args = await list(itr)
+            yield fn(*args)
+
+
+async def takewhile(predicate: Predicate, iterable: AnyIterable) -> AsyncIterator[T]:
+    """
+    Yield values from the iterable until the predicate evaluates False.
+
+    Accepts both standard functions and coroutines for the predicate.
+
+    Example:
+
+        def pred(x):
+            return x < 4
+
+        async for value in takewhile(pred, range(8)):
+            ...  # 0, 1, 2, 3
+
+    """
+    if asyncio.iscoroutinefunction(predicate):
+        async for item in iter(iterable):
+            if await predicate(item):
+                yield item
+            else:
+                break
+    else:
+        async for item in iter(iterable):
+            if predicate(item):
+                yield item
+            else:
+                break
 
 
 def tee(itr: AnyIterable, n: int = 2) -> Tuple[AsyncIterator[T], ...]:
