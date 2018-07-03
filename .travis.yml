@@ -1,6 +1,8 @@
 language: python
+dist: xenial
 python:
     - "3.6"
+    - "3.7"
     - "3.6-dev"
     - "3.7-dev"
 install:
@@ -10,4 +12,5 @@ script:
     - "make lint test"
 matrix:
     allow_failures:
+        - python: "3.6-dev"
         - python: "3.7-dev"
