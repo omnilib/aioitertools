@@ -14,6 +14,7 @@ use with `await`, `async for`, etc.
 import asyncio
 import builtins
 from typing import (
+    Any,
     AsyncIterable,
     AsyncIterator,
     Callable,
@@ -21,14 +22,15 @@ from typing import (
     List,
     Set,
     Tuple,
-    Sequence,
+    TypeVar,
     cast,
+    overload,
 )
 
 from .types import AnyIterable, AnyIterator, AnyStop, T, R
 
 
-def iter(itr: AnyIterable) -> AsyncIterator[T]:
+def iter(itr: AnyIterable[T]) -> AsyncIterator[T]:
     """
     Get an async iterator from any mixed iterable.
 
@@ -58,7 +60,7 @@ def iter(itr: AnyIterable) -> AsyncIterator[T]:
     return gen()
 
 
-async def next(itr: AnyIterator) -> T:
+async def next(itr: AnyIterator[T]) -> T:
     """
     Return the next item of any mixed iterator.
 
@@ -75,7 +77,7 @@ async def next(itr: AnyIterator) -> T:
     return builtins.next(itr)
 
 
-async def list(itr: AnyIterable) -> List[T]:
+async def list(itr: AnyIterable[T]) -> List[T]:
     """
     Consume a mixed iterable and return a list of items in order.
 
@@ -88,7 +90,7 @@ async def list(itr: AnyIterable) -> List[T]:
     return [item async for item in iter(itr)]
 
 
-async def set(itr: AnyIterable) -> Set[T]:
+async def set(itr: AnyIterable[T]) -> Set[T]:
     """
     Consume a mixed iterable and return a set of items.
 
@@ -101,7 +103,7 @@ async def set(itr: AnyIterable) -> Set[T]:
     return {item async for item in iter(itr)}
 
 
-async def enumerate(itr: AnyIterable, start: int = 0) -> AsyncIterator[Tuple[int, T]]:
+async def enumerate(itr: AnyIterable[T], start: int = 0) -> AsyncIterator[Tuple[int, T]]:
     """
     Consume a mixed iterable and yield the current index and item.
 
@@ -117,7 +119,7 @@ async def enumerate(itr: AnyIterable, start: int = 0) -> AsyncIterator[Tuple[int
         index += 1
 
 
-async def map(fn: Callable[[T], R], itr: AnyIterable) -> AsyncIterator[R]:
+async def map(fn: Callable[[T], R], itr: AnyIterable[T]) -> AsyncIterator[R]:
     """
     Modify item of a mixed iterable using the given function or coroutine.
 
@@ -137,7 +139,7 @@ async def map(fn: Callable[[T], R], itr: AnyIterable) -> AsyncIterator[R]:
             yield fn(item)
 
 
-async def sum(itr: AnyIterable, start: T = None) -> T:
+async def sum(itr: AnyIterable[T], start: T = None) -> T:
     """
     Compute the sum of a mixed iterable, adding each value with the start value.
 
@@ -159,7 +161,70 @@ async def sum(itr: AnyIterable, start: T = None) -> T:
     return value
 
 
-async def zip(*itrs: AnyIterable) -> AsyncIterator[Sequence[T]]:
+T1 = TypeVar("T1")
+T2 = TypeVar("T2")
+T3 = TypeVar("T3")
+T4 = TypeVar("T4")
+T5 = TypeVar("T5")
+
+# pylint: disable=unused-argument,missing-docstring,undefined-variable
+# pylint: disable=function-redefined,multiple-statements,too-many-arguments
+@overload
+def zip(__iter1: AnyIterable[T1]) -> AsyncIterator[Tuple[T1]]:
+    pass
+
+
+@overload
+def zip(
+    __iter1: AnyIterable[T1], __iter2: AnyIterable[T2]
+) -> AsyncIterator[Tuple[T1, T2]]:
+    pass
+
+
+@overload
+def zip(
+    __iter1: AnyIterable[T1], __iter2: AnyIterable[T2], __iter3: AnyIterable[T3]
+) -> AsyncIterator[Tuple[T1, T2, T3]]:
+    pass
+
+
+@overload
+def zip(
+    __iter1: AnyIterable[T1],
+    __iter2: AnyIterable[T2],
+    __iter3: AnyIterable[T3],
+    __iter4: AnyIterable[T4],
+) -> AsyncIterator[Tuple[T1, T2, T3, T4]]:
+    pass
+
+
+@overload
+def zip(
+    __iter1: AnyIterable[T1],
+    __iter2: AnyIterable[T2],
+    __iter3: AnyIterable[T3],
+    __iter4: AnyIterable[T4],
+    __iter5: AnyIterable[T5],
+) -> AsyncIterator[Tuple[T1, T2, T3, T4, T5]]:
+    pass
+
+
+@overload
+def zip(
+    __iter1: AnyIterable[Any],
+    __iter2: AnyIterable[Any],
+    __iter3: AnyIterable[Any],
+    __iter4: AnyIterable[Any],
+    __iter5: AnyIterable[Any],
+    __iter6: AnyIterable[Any],
+    *__iterables: AnyIterable[Any]
+) -> AsyncIterator[Tuple[Any, ...]]:
+    pass
+
+
+# pylint: enable=unused-argument,missing-docstring,undefined-variable
+# pylint: enable=too-many-arguments,multiple-statements
+async def zip(*itrs: AnyIterable[Any]) -> AsyncIterator[Tuple[Any, ...]]:
     """
     Yield a tuple of items from mixed iterables until the shortest is consumed.
 
@@ -169,7 +234,7 @@ async def zip(*itrs: AnyIterable) -> AsyncIterator[Sequence[T]]:
             ...
 
     """
-    its: List[AsyncIterator[T]] = [iter(itr) for itr in itrs]
+    its: List[AsyncIterator[Any]] = [iter(itr) for itr in itrs]
 
     while True:
         try:
@@ -177,3 +242,6 @@ async def zip(*itrs: AnyIterable) -> AsyncIterator[Sequence[T]]:
             yield values
         except AnyStop:
             break
+
+
+# pylint: enable=function-redefined

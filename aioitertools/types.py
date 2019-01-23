@@ -2,7 +2,6 @@
 # Licensed under the MIT license
 
 from typing import (
-    Any,
     Callable,
     Iterable,
     Iterator,
@@ -15,12 +14,13 @@ from typing import (
 
 R = TypeVar("R")
 T = TypeVar("T")
+N = TypeVar("N", int, float)
 
 AnyFunction = Union[Callable[..., R], Callable[..., Awaitable[R]]]
 AnyIterable = Union[Iterable[T], AsyncIterable[T]]
-AnyIterableIterable = Union[Iterable[AnyIterable], AsyncIterable[AnyIterable]]
+AnyIterableIterable = Union[Iterable[AnyIterable[T]], AsyncIterable[AnyIterable[T]]]
 AnyIterator = Union[Iterator[T], AsyncIterator[T]]
 AnyStop = (StopIteration, StopAsyncIteration)
 Accumulator = Union[Callable[[T, T], T], Callable[[T, T], Awaitable[T]]]
-KeyFunction = Union[Callable[..., Any], Callable[..., Awaitable[Any]]]
-Predicate = Union[Callable[..., bool], Callable[..., Awaitable[bool]]]
+KeyFunction = Union[Callable[[T], R], Callable[[T], Awaitable[R]]]
+Predicate = Union[Callable[[T], object], Callable[[T], Awaitable[object]]]

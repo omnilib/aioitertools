@@ -30,6 +30,7 @@ setup(
     ],
     license="MIT",
     packages=["aioitertools", "aioitertools.tests"],
+    package_data={"aioitertools": ["py.typed"]},
     setup_requires=["setuptools>=38.6.0"],
     install_requires=[],
 )
