@@ -101,7 +101,7 @@ async def set(itr: AnyIterable) -> Set[T]:
     return {item async for item in iter(itr)}
 
 
-async def enumerate(itr: AnyIterable) -> AsyncIterator[Tuple[int, T]]:
+async def enumerate(itr: AnyIterable, start: int = 0) -> AsyncIterator[Tuple[int, T]]:
     """
     Consume a mixed iterable and yield the current index and item.
 
@@ -111,7 +111,7 @@ async def enumerate(itr: AnyIterable) -> AsyncIterator[Tuple[int, T]]:
             ...
 
     """
-    index = 0
+    index = start
     async for item in iter(itr):
         yield index, item
         index += 1

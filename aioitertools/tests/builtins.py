@@ -146,6 +146,11 @@ class BuiltinsTest(TestCase):
         async for index, value in ait.enumerate(slist):
             self.assertEqual(value, slist[index])
 
+    @async_test
+    async def test_enumerate_start(self):
+        async for index, value in ait.enumerate(slist, 4):
+            self.assertEqual(value, slist[index - 4])
+
     # aioitertools.map()
 
     @async_test
