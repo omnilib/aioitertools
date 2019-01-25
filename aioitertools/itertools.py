@@ -17,7 +17,7 @@ import asyncio
 import builtins
 import itertools
 import operator
-from typing import Any, AsyncIterator, List, Optional, Sequence, Tuple
+from typing import Any, AsyncIterator, Iterable, List, Optional, Tuple, overload
 
 from .builtins import enumerate, iter, list, next, zip
 from .types import (
@@ -30,11 +30,12 @@ from .types import (
     Predicate,
     R,
     T,
+    N,
 )
 
 
 async def accumulate(
-    itr: AnyIterable, func: Accumulator = operator.add
+    itr: AnyIterable[T], func: Accumulator[T] = operator.add
 ) -> AsyncIterator[T]:
     """
     Yield the running accumulation of an iterable and operator.
@@ -70,7 +71,7 @@ async def accumulate(
 
 
 class Chain:
-    async def __call__(self, *itrs: AnyIterable) -> AsyncIterator[T]:
+    async def __call__(self, *itrs: AnyIterable[T]) -> AsyncIterator[T]:
         """
         Yield values from one or more iterables in series.
 
@@ -86,7 +87,7 @@ class Chain:
             async for item in iter(itr):
                 yield item
 
-    def from_iterable(self, itrs: AnyIterableIterable) -> AsyncIterator[T]:
+    def from_iterable(self, itrs: Iterable[AnyIterable[T]]) -> AsyncIterator[T]:
         """
         Like chain, but takes an iterable of iterables.
 
@@ -98,7 +99,7 @@ class Chain:
 chain = Chain()
 
 
-async def combinations(itr: AnyIterable, r: int) -> AsyncIterator[Sequence[T]]:
+async def combinations(itr: AnyIterable[T], r: int) -> AsyncIterator[Tuple[T, ...]]:
     """
     Yield r length subsequences from the given iterable.
 
@@ -117,8 +118,8 @@ async def combinations(itr: AnyIterable, r: int) -> AsyncIterator[Sequence[T]]:
 
 
 async def combinations_with_replacement(
-    itr: AnyIterable, r: int
-) -> AsyncIterator[Sequence[T]]:
+    itr: AnyIterable[T], r: int
+) -> AsyncIterator[Tuple[T, ...]]:
     """
     Yield r length subsequences from the given iterable with replacement.
 
@@ -136,7 +137,9 @@ async def combinations_with_replacement(
         yield value
 
 
-async def compress(itr: AnyIterable, selectors: AnyIterable) -> AsyncIterator[T]:
+async def compress(
+    itr: AnyIterable[T], selectors: AnyIterable[Any]
+) -> AsyncIterator[T]:
     """
     Yield elements only when the corresponding selector evaluates to True.
 
@@ -152,7 +155,7 @@ async def compress(itr: AnyIterable, selectors: AnyIterable) -> AsyncIterator[T]
             yield value
 
 
-async def count(start: int = 0, step: int = 1) -> AsyncIterator[T]:
+async def count(start: N = 0, step: N = 1) -> AsyncIterator[N]:
     """
     Yield an infinite series, starting at the given value and increasing by step.
 
@@ -169,7 +172,7 @@ async def count(start: int = 0, step: int = 1) -> AsyncIterator[T]:
         value += step
 
 
-async def cycle(itr: AnyIterable) -> AsyncIterator[T]:
+async def cycle(itr: AnyIterable[T]) -> AsyncIterator[T]:
     """
     Yield a repeating series from the given iterable.
 
@@ -192,7 +195,9 @@ async def cycle(itr: AnyIterable) -> AsyncIterator[T]:
             yield item
 
 
-async def dropwhile(predicate: Predicate, iterable: AnyIterable) -> AsyncIterator[T]:
+async def dropwhile(
+    predicate: Predicate[T], iterable: AnyIterable[T]
+) -> AsyncIterator[T]:
     """
     Drops all items until the predicate evaluates False; yields all items afterwards.
 
@@ -222,7 +227,9 @@ async def dropwhile(predicate: Predicate, iterable: AnyIterable) -> AsyncIterato
         yield item
 
 
-async def filterfalse(predicate: Predicate, iterable: AnyIterable) -> AsyncIterator[T]:
+async def filterfalse(
+    predicate: Predicate[T], iterable: AnyIterable[T]
+) -> AsyncIterator[T]:
     """
     Yield items from the iterable only when the predicate evaluates to False.
 
@@ -247,9 +254,23 @@ async def filterfalse(predicate: Predicate, iterable: AnyIterable) -> AsyncItera
                 yield item
 
 
+# pylint: disable=undefined-variable,multiple-statements
+@overload
+def groupby(itr: AnyIterable[T]) -> AsyncIterator[Tuple[T, List[T]]]:
+    pass
+
+
+@overload
+def groupby(
+    itr: AnyIterable[T], key: KeyFunction[T, R]
+) -> AsyncIterator[Tuple[R, List[T]]]:
+    pass
+
+
+# pylint: enable=undefined-variable,multiple-statements
 async def groupby(
-    itr: AnyIterable, key: KeyFunction = None
-) -> AsyncIterator[Tuple[Any, Sequence[T]]]:
+    itr: AnyIterable[T], key: Optional[KeyFunction[T, R]] = None
+) -> AsyncIterator[Tuple[Any, List[T]]]:
     """
     Yield consecutive keys and groupings from the given iterable.
 
@@ -270,7 +291,7 @@ async def groupby(
     if key is None:
         key = lambda x: x
 
-    grouping = []
+    grouping: List[T] = []
 
     it = iter(itr)
     item = await next(it)
@@ -301,7 +322,21 @@ async def groupby(
     yield j, grouping
 
 
-async def islice(itr: AnyIterable, *args: int) -> AsyncIterator[T]:
+# pylint: disable=undefined-variable,multiple-statements
+@overload
+def islice(itr: AnyIterable[T], __stop: Optional[int]) -> AsyncIterator[T]:
+    pass
+
+
+@overload
+def islice(
+    itr: AnyIterable[T], __start: int, __stop: Optional[int], __step: int = 1
+) -> AsyncIterator[T]:
+    pass
+
+
+# pylint: enable=undefined-variable,multiple-statements
+async def islice(itr: AnyIterable[T], *args: Optional[int]) -> AsyncIterator[T]:
     """
     Yield selected items from the given iterable.
 
@@ -348,7 +383,9 @@ async def islice(itr: AnyIterable, *args: int) -> AsyncIterator[T]:
         yield item
 
 
-async def permutations(itr: AnyIterable, r: int = None) -> AsyncIterator[Sequence[T]]:
+async def permutations(
+    itr: AnyIterable[T], r: Optional[int] = None
+) -> AsyncIterator[Tuple[T, ...]]:
     """
     Yield r length permutations of elements in the iterable.
 
@@ -367,8 +404,8 @@ async def permutations(itr: AnyIterable, r: int = None) -> AsyncIterator[Sequenc
 
 
 async def product(
-    *itrs: AnyIterable, repeat: int = 1  # pylint: disable=redefined-outer-name
-) -> AsyncIterator[Sequence[T]]:
+    *itrs: AnyIterable[T], repeat: int = 1  # pylint: disable=redefined-outer-name
+) -> AsyncIterator[Tuple[T, ...]]:
     """
     Yield cartesian products of all iterables.
 
@@ -406,7 +443,9 @@ async def repeat(elem: T, n: int = -1) -> AsyncIterator[T]:
         n -= 1
 
 
-async def starmap(fn: AnyFunction, iterable: AnyIterableIterable) -> AsyncIterator[R]:
+async def starmap(
+    fn: AnyFunction[R], iterable: AnyIterableIterable[Any]
+) -> AsyncIterator[R]:
     """
     Yield values from a function using an iterable of iterables for arguments.
 
@@ -431,7 +470,9 @@ async def starmap(fn: AnyFunction, iterable: AnyIterableIterable) -> AsyncIterat
             yield fn(*args)
 
 
-async def takewhile(predicate: Predicate, iterable: AnyIterable) -> AsyncIterator[T]:
+async def takewhile(
+    predicate: Predicate[T], iterable: AnyIterable[T]
+) -> AsyncIterator[T]:
     """
     Yield values from the iterable until the predicate evaluates False.
 
@@ -460,7 +501,7 @@ async def takewhile(predicate: Predicate, iterable: AnyIterable) -> AsyncIterato
                 break
 
 
-def tee(itr: AnyIterable, n: int = 2) -> Tuple[AsyncIterator[T], ...]:
+def tee(itr: AnyIterable[T], n: int = 2) -> Tuple[AsyncIterator[T], ...]:
     """
     Return n iterators that each yield items from the given iterable.
 
@@ -487,7 +528,7 @@ def tee(itr: AnyIterable, n: int = 2) -> Tuple[AsyncIterator[T], ...]:
     """
     assert n > 0
     sentinel = object()
-    queues = [asyncio.Queue() for k in range(n)]
+    queues: List[asyncio.Queue] = [asyncio.Queue() for k in range(n)]
 
     async def gen(k: int, q: asyncio.Queue) -> AsyncIterator[T]:
         if k == 0:
@@ -508,8 +549,8 @@ def tee(itr: AnyIterable, n: int = 2) -> Tuple[AsyncIterator[T], ...]:
 
 
 async def zip_longest(
-    *itrs: AnyIterable, fillvalue: T = None
-) -> AsyncIterator[Sequence[Optional[T]]]:
+    *itrs: AnyIterable[Any], fillvalue: Any = None
+) -> AsyncIterator[Tuple[Any, ...]]:
     """
     Yield a tuple of items from mixed iterables until all are consumed.
 
@@ -526,7 +567,7 @@ async def zip_longest(
             b  # 0, 1, 2,  3,  4
 
     """
-    its: List[AsyncIterator[T]] = [iter(itr) for itr in itrs]
+    its: List[AsyncIterator[Any]] = [iter(itr) for itr in itrs]
     itr_count = len(its)
 
     while True:
