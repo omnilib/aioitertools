@@ -46,7 +46,7 @@ def iter(itr: AnyIterable) -> AsyncIterator[T]:
     if isinstance(itr, AsyncIterator):
         return itr
 
-    elif isinstance(itr, AsyncIterable):
+    if isinstance(itr, AsyncIterable):
         return itr.__aiter__()
 
     async def gen() -> AsyncIterator[T]:
