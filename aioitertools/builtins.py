@@ -22,12 +22,11 @@ from typing import (
     List,
     Set,
     Tuple,
-    TypeVar,
     cast,
     overload,
 )
 
-from .types import AnyIterable, AnyIterator, AnyStop, T, R
+from .types import AnyIterable, AnyIterator, AnyStop, T, R, T1, T2, T3, T4, T5
 
 
 def iter(itr: AnyIterable[T]) -> AsyncIterator[T]:
@@ -103,7 +102,9 @@ async def set(itr: AnyIterable[T]) -> Set[T]:
     return {item async for item in iter(itr)}
 
 
-async def enumerate(itr: AnyIterable[T], start: int = 0) -> AsyncIterator[Tuple[int, T]]:
+async def enumerate(
+    itr: AnyIterable[T], start: int = 0
+) -> AsyncIterator[Tuple[int, T]]:
     """
     Consume a mixed iterable and yield the current index and item.
 
@@ -161,14 +162,7 @@ async def sum(itr: AnyIterable[T], start: T = None) -> T:
     return value
 
 
-T1 = TypeVar("T1")
-T2 = TypeVar("T2")
-T3 = TypeVar("T3")
-T4 = TypeVar("T4")
-T5 = TypeVar("T5")
-
-# pylint: disable=unused-argument,missing-docstring,undefined-variable
-# pylint: disable=function-redefined,multiple-statements,too-many-arguments
+# pylint: disable=undefined-variable,multiple-statements,too-many-arguments
 @overload
 def zip(__iter1: AnyIterable[T1]) -> AsyncIterator[Tuple[T1]]:
     pass
@@ -222,8 +216,7 @@ def zip(
     pass
 
 
-# pylint: enable=unused-argument,missing-docstring,undefined-variable
-# pylint: enable=too-many-arguments,multiple-statements
+# pylint: enable=undefined-variable,multiple-statements,too-many-arguments
 async def zip(*itrs: AnyIterable[Any]) -> AsyncIterator[Tuple[Any, ...]]:
     """
     Yield a tuple of items from mixed iterables until the shortest is consumed.
@@ -242,6 +235,3 @@ async def zip(*itrs: AnyIterable[Any]) -> AsyncIterator[Tuple[Any, ...]]:
             yield values
         except AnyStop:
             break
-
-
-# pylint: enable=function-redefined

@@ -254,8 +254,7 @@ async def filterfalse(
                 yield item
 
 
-# pylint: disable=unused-argument,missing-docstring,undefined-variable
-# pylint: disable=function-redefined,multiple-statements
+# pylint: disable=undefined-variable,multiple-statements
 @overload
 def groupby(itr: AnyIterable[T]) -> AsyncIterator[Tuple[T, List[T]]]:
     pass
@@ -268,8 +267,7 @@ def groupby(
     pass
 
 
-# pylint: enable=unused-argument,missing-docstring,undefined-variable
-# pylint: enable=multiple-statements
+# pylint: enable=undefined-variable,multiple-statements
 async def groupby(
     itr: AnyIterable[T], key: Optional[KeyFunction[T, R]] = None
 ) -> AsyncIterator[Tuple[Any, List[T]]]:
@@ -324,10 +322,7 @@ async def groupby(
     yield j, grouping
 
 
-# pylint: enable=function-redefined
-
-# pylint: disable=unused-argument,missing-docstring,undefined-variable
-# pylint: disable=function-redefined,multiple-statements
+# pylint: disable=undefined-variable,multiple-statements
 @overload
 def islice(itr: AnyIterable[T], __stop: Optional[int]) -> AsyncIterator[T]:
     pass
@@ -340,8 +335,7 @@ def islice(
     pass
 
 
-# pylint: enable=unused-argument,missing-docstring,undefined-variable
-# pylint: enable=multiple-statements
+# pylint: enable=undefined-variable,multiple-statements
 async def islice(itr: AnyIterable[T], *args: Optional[int]) -> AsyncIterator[T]:
     """
     Yield selected items from the given iterable.
@@ -387,9 +381,6 @@ async def islice(itr: AnyIterable[T], *args: Optional[int]) -> AsyncIterator[T]:
         if (index - start) % step != 0:
             continue
         yield item
-
-
-# pylint: enable=function-redefined
 
 
 async def permutations(

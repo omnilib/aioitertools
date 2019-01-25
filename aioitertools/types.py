@@ -14,6 +14,11 @@ from typing import (
 
 R = TypeVar("R")
 T = TypeVar("T")
+T1 = TypeVar("T1")
+T2 = TypeVar("T2")
+T3 = TypeVar("T3")
+T4 = TypeVar("T4")
+T5 = TypeVar("T5")
 N = TypeVar("N", int, float)
 
 AnyFunction = Union[Callable[..., R], Callable[..., Awaitable[R]]]
