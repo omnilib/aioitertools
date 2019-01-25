@@ -20,9 +20,9 @@ black:
 	black aioitertools setup.py
 
 lint:
-	black --check aioitertools setup.py
-	pylint --rcfile .pylint aioitertools setup.py
 	-mypy --ignore-missing-imports --python-version 3.6 .
+	pylint --rcfile .pylint aioitertools setup.py
+	black --check aioitertools setup.py
 
 test:
 	python3 -m unittest -v aioitertools.tests
