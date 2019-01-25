@@ -51,9 +51,7 @@ def iter(itr: AnyIterable[T]) -> AsyncIterator[T]:
         return itr.__aiter__()
 
     async def gen() -> AsyncIterator[T]:
-        nonlocal itr
-        itr = cast(Iterable[T], itr)
-        for item in itr:
+        for item in cast(Iterable[T], itr):
             yield item
 
     return gen()
