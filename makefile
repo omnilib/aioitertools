@@ -8,7 +8,7 @@ setup:
 	pip3 install -U black mypy pylint twine
 
 venv:
-	python3 -m virtualenv .venv
+	python3 -m venv .venv
 	source .venv/bin/activate && make setup dev
 	echo 'run `source .venv/bin/activate` to use virtualenv'
 
