@@ -13,20 +13,39 @@ use with `await`, `async for`, etc.
 
 import asyncio
 import builtins
+import inspect
 from typing import (
     Any,
     AsyncIterable,
     AsyncIterator,
+    Awaitable,
     Callable,
     Iterable,
     List,
     Set,
     Tuple,
+    Union,
     cast,
     overload,
 )
 
 from .types import AnyIterable, AnyIterator, AnyStop, T, R, T1, T2, T3, T4, T5
+
+
+@overload
+async def maybe_await(object: Awaitable[T]) -> T:
+    pass
+
+
+@overload
+async def maybe_await(object: T) -> T:
+    pass
+
+
+async def maybe_await(object: Union[Awaitable[T], T]) -> T:
+    if inspect.isawaitable(object):
+        return await object  # type: ignore
+    return object  # type: ignore
 
 
 def iter(itr: AnyIterable[T]) -> AsyncIterator[T]:
@@ -128,14 +147,9 @@ async def map(fn: Callable[[T], R], itr: AnyIterable[T]) -> AsyncIterator[R]:
             ...
 
     """
-    if asyncio.iscoroutinefunction(fn):
-        # todo: queue items eagerly
-        async for item in iter(itr):
-            yield await fn(item)  # type: ignore  # todo: better mixed function type
-
-    else:
-        async for item in iter(itr):
-            yield fn(item)
+    # todo: queue items eagerly
+    async for item in iter(itr):
+        yield await maybe_await(fn(item))
 
 
 async def sum(itr: AnyIterable[T], start: T = None) -> T:

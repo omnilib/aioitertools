@@ -2,10 +2,12 @@
 # Licensed under the MIT license
 
 import asyncio
+import functools
 from typing import AsyncIterator
 from unittest import TestCase
 
 import aioitertools as ait
+from aioitertools.builtins import maybe_await
 from .helpers import async_test
 
 slist = ["A", "B", "C"]
@@ -13,6 +15,37 @@ srange = range(3)
 
 
 class BuiltinsTest(TestCase):
+
+    # aioitertools.maybe_await()
+
+    @async_test
+    async def test_maybe_await(self):
+        self.assertEqual(await maybe_await(42), 42)
+
+    @async_test
+    async def test_maybe_await_async_def(self):
+        async def forty_two():
+            await asyncio.sleep(0.0001)
+            return 42
+
+        self.assertEqual(await maybe_await(forty_two()), 42)
+
+    @async_test
+    async def test_maybe_await_coroutine(self):
+        @asyncio.coroutine
+        def forty_two():
+            yield from asyncio.sleep(0.0001)
+            return 42
+
+        self.assertEqual(await maybe_await(forty_two()), 42)
+
+    @async_test
+    async def test_maybe_await_partial(self):
+        async def multiply(a, b):
+            await asyncio.sleep(0.0001)
+            return a * b
+
+        self.assertEqual(await maybe_await(functools.partial(multiply, 6)(7)), 42)
 
     # aioitertools.iter()
 
