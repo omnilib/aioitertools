@@ -19,7 +19,8 @@ import itertools
 import operator
 from typing import Any, AsyncIterator, Iterable, List, Optional, Tuple, overload
 
-from .builtins import enumerate, iter, list, maybe_await, next, zip
+from .builtins import enumerate, iter, list, next, zip
+from .helpers import maybe_await
 from .types import (
     Accumulator,
     AnyFunction,

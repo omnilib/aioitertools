@@ -3,3 +3,4 @@
 
 from .builtins import BuiltinsTest
 from .itertools import ItertoolsTest
+from .helpers import HelpersTest
