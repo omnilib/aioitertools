@@ -20,6 +20,7 @@ import operator
 from typing import Any, AsyncIterator, Iterable, List, Optional, Tuple, overload
 
 from .builtins import enumerate, iter, list, next, zip
+from .helpers import maybe_await
 from .types import (
     Accumulator,
     AnyFunction,
@@ -60,14 +61,9 @@ async def accumulate(
         return
 
     yield total
-    if asyncio.iscoroutinefunction(func):
-        async for item in itr:
-            total = await func(total, item)
-            yield total
-    else:
-        async for item in itr:
-            total = func(total, item)
-            yield total
+    async for item in itr:
+        total = await maybe_await(func(total, item))
+        yield total
 
 
 class Chain:
@@ -213,16 +209,10 @@ async def dropwhile(
 
     """
     itr = iter(iterable)
-    if asyncio.iscoroutinefunction(predicate):
-        async for item in itr:
-            if not await predicate(item):
-                yield item
-                break
-    else:
-        async for item in itr:
-            if not predicate(item):
-                yield item
-                break
+    async for item in itr:
+        if not await maybe_await(predicate(item)):
+            yield item
+            break
     async for item in itr:
         yield item
 
@@ -244,14 +234,9 @@ async def filterfalse(
             ...  # 4, 5
 
     """
-    if asyncio.iscoroutinefunction(predicate):
-        async for item in iter(iterable):
-            if not await predicate(item):
-                yield item
-    else:
-        async for item in iter(iterable):
-            if not predicate(item):
-                yield item
+    async for item in iter(iterable):
+        if not await maybe_await(predicate(item)):
+            yield item
 
 
 # pylint: disable=undefined-variable,multiple-statements
@@ -297,27 +282,15 @@ async def groupby(
     item = await next(it)
     grouping = [item]
 
-    if asyncio.iscoroutinefunction(key):
-        j = await key(item)
-        async for item in it:
-            k = await key(item)
-            if k != j:
-                yield j, grouping
-                grouping = [item]
-            else:
-                grouping.append(item)
-            j = k
-
-    else:
-        j = key(item)
-        async for item in it:
-            k = key(item)
-            if k != j:
-                yield j, grouping
-                grouping = [item]
-            else:
-                grouping.append(item)
-            j = k
+    j = await maybe_await(key(item))
+    async for item in it:
+        k = await maybe_await(key(item))
+        if k != j:
+            yield j, grouping
+            grouping = [item]
+        else:
+            grouping.append(item)
+        j = k
 
     yield j, grouping
 
@@ -367,9 +340,9 @@ async def islice(itr: AnyIterable[T], *args: Optional[int]) -> AsyncIterator[T]:
     elif len(args) == 1:
         stop, = args
     elif len(args) == 2:
-        start, stop = args
+        start, stop = args  # type: ignore
     elif len(args) == 3:
-        start, stop, step = args
+        start, stop, step = args  # type: ignore
     assert start >= 0 and (stop is None or stop >= 0) and step >= 0
     step = max(1, step)
 
@@ -460,14 +433,9 @@ async def starmap(
             ...  # 2, 3, 4
 
     """
-    if asyncio.iscoroutinefunction(fn):
-        async for itr in iter(iterable):
-            args = await list(itr)
-            yield await fn(*args)
-    else:
-        async for itr in iter(iterable):
-            args = await list(itr)
-            yield fn(*args)
+    async for itr in iter(iterable):
+        args = await list(itr)
+        yield await maybe_await(fn(*args))
 
 
 async def takewhile(
@@ -487,18 +455,11 @@ async def takewhile(
             ...  # 0, 1, 2, 3
 
     """
-    if asyncio.iscoroutinefunction(predicate):
-        async for item in iter(iterable):
-            if await predicate(item):
-                yield item
-            else:
-                break
-    else:
-        async for item in iter(iterable):
-            if predicate(item):
-                yield item
-            else:
-                break
+    async for item in iter(iterable):
+        if await maybe_await(predicate(item)):
+            yield item
+        else:
+            break
 
 
 def tee(itr: AnyIterable[T], n: int = 2) -> Tuple[AsyncIterator[T], ...]:
