@@ -349,7 +349,6 @@ async def islice(itr: AnyIterable[T], *args: Optional[int]) -> AsyncIterator[T]:
     if stop == 0:
         return
 
-    itr = iter(itr)
     async for index, item in enumerate(itr):
         if index >= start and (index - start) % step == 0:
             yield item
