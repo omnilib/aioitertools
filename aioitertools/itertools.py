@@ -337,7 +337,7 @@ async def islice(itr: AnyIterable[T], *args: Optional[int]) -> AsyncIterator[T]:
     step = 1
     if not args:
         raise ValueError("must pass stop index")
-    elif len(args) == 1:
+    if len(args) == 1:
         stop, = args
     elif len(args) == 2:
         start, stop = args  # type: ignore
