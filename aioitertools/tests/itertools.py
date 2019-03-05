@@ -352,11 +352,13 @@ class ItertoolsTest(TestCase):
             yield 3
             yield 4
 
-        it = ait.islice(gen(), 2)
+        gen_it = gen()
+        it = ait.islice(gen_it, 2)
         for k in [1, 2]:
             self.assertEqual(await ait.next(it), k)
         with self.assertRaises(StopAsyncIteration):
             await ait.next(it)
+        assert await ait.list(gen_it) == [3, 4]
 
     @async_test
     async def test_islice_gen_start_step(self):
@@ -394,11 +396,13 @@ class ItertoolsTest(TestCase):
             yield 3
             yield 4
 
-        it = ait.islice(gen(), 1, 3, 2)
+        gen_it = gen()
+        it = ait.islice(gen_it, 1, 3, 2)
         for k in [2]:
             self.assertEqual(await ait.next(it), k)
         with self.assertRaises(StopAsyncIteration):
             await ait.next(it)
+        assert await ait.list(gen_it) == [4]
 
     @async_test
     async def test_permutations_list(self):

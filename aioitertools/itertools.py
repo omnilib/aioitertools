@@ -346,14 +346,15 @@ async def islice(itr: AnyIterable[T], *args: Optional[int]) -> AsyncIterator[T]:
     assert start >= 0 and (stop is None or stop >= 0) and step >= 0
     step = max(1, step)
 
+    if stop == 0:
+        return
+
+    itr = iter(itr)
     async for index, item in enumerate(itr):
-        if index < start:
-            continue
-        if stop is not None and index >= stop:
+        if index >= start and (index - start) % step == 0:
+            yield item
+        if stop is not None and index + 1 >= stop:
             break
-        if (index - start) % step != 0:
-            continue
-        yield item
 
 
 async def permutations(
