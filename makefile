@@ -28,4 +28,4 @@ test:
 	python3 -m unittest -v aioitertools.tests
 
 clean:
-	rm -rf build dist README MANIFEST .venv *.egg-info
+	rm -rf build dist README MANIFEST *.egg-info
