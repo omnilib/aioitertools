@@ -17,7 +17,7 @@ import asyncio
 import builtins
 import itertools
 import operator
-from typing import Any, AsyncIterator, Iterable, List, Optional, Tuple, overload
+from typing import Any, AsyncIterator, List, Optional, Tuple, overload
 
 from .builtins import enumerate, iter, list, next, zip
 from .helpers import maybe_await
@@ -67,7 +67,7 @@ async def accumulate(
 
 
 class Chain:
-    async def __call__(self, *itrs: AnyIterable[T]) -> AsyncIterator[T]:
+    def __call__(self, *itrs: AnyIterable[T]) -> AsyncIterator[T]:
         """
         Yield values from one or more iterables in series.
 
@@ -79,17 +79,17 @@ class Chain:
                 ...  # 1, 2, 3, 7, 8, 9
 
         """
-        async for itr in iter(itrs):
-            async for item in iter(itr):
-                yield item
+        return self.from_iterable(itrs)
 
-    def from_iterable(self, itrs: Iterable[AnyIterable[T]]) -> AsyncIterator[T]:
+    async def from_iterable(self, itrs: AnyIterableIterable[T]) -> AsyncIterator[T]:
         """
         Like chain, but takes an iterable of iterables.
 
         Alias for chain(*itrs)
         """
-        return self(*itrs)
+        async for itr in iter(itrs):
+            async for item in iter(itr):
+                yield item
 
 
 chain = Chain()

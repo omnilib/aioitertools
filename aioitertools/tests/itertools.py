@@ -107,6 +107,22 @@ class ItertoolsTest(TestCase):
             await ait.next(it)
 
     @async_test
+    async def test_chain_from_iterable_parameter_expansion_gen(self):
+        async def gen():
+            for k in range(2, 9, 2):
+                yield k
+
+        async def parameters_gen():
+            yield slist
+            yield gen()
+
+        it = ait.chain.from_iterable(parameters_gen())
+        for k in ["A", "B", "C", 2, 4, 6, 8]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
+    @async_test
     async def test_combinations(self):
         it = ait.combinations(range(4), 3)
         for k in [(0, 1, 2), (0, 1, 3), (0, 2, 3), (1, 2, 3)]:
