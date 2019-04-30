@@ -6,8 +6,9 @@ itertools for AsyncIO and mixed iterables
 """
 
 __author__ = "John Reese"
-__version__ = "0.3.2"
+__version__ = "0.4.0"
 
+from . import asyncio
 from .builtins import iter, next, list, set, enumerate, map, sum, zip
 from .itertools import (
     accumulate,
