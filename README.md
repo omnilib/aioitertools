@@ -3,7 +3,8 @@ aioitertools
 
 itertools for AsyncIO and mixed iterables.
 
-[![build status](https://travis-ci.org/jreese/aioitertools.svg?branch=master)](https://travis-ci.org/jreese/aioitertools)
+[![build status](https://github.com/jreese/aioitertools/workflows/Build/badge.svg)](https://github.com/jreese/aioitertools/actions)
+[![code coverage](https://img.shields.io/codecov/c/gh/jreese/aioitertools)](https://codecov.io/gh/jreese/aioitertools)
 [![version](https://img.shields.io/pypi/v/aioitertools.svg)](https://pypi.org/project/aioitertools)
 [![license](https://img.shields.io/pypi/l/aioitertools.svg)](https://github.com/jreese/aioitertools/blob/master/LICENSE)
 [![code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
