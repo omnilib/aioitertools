@@ -2,6 +2,7 @@
 # Licensed under the MIT license
 
 import asyncio
+import operator
 from unittest import TestCase
 
 import aioitertools as ait
@@ -23,10 +24,7 @@ class ItertoolsTest(TestCase):
 
     @async_test
     async def test_accumulate_range_function(self):
-        def mul(a, b):
-            return a * b
-
-        it = ait.accumulate(srange, func=mul)
+        it = ait.accumulate(srange, func=operator.mul)
         for k in [1, 2, 6]:
             self.assertEqual(await ait.next(it), k)
         with self.assertRaises(StopAsyncIteration):
@@ -45,15 +43,12 @@ class ItertoolsTest(TestCase):
 
     @async_test
     async def test_accumulate_gen_function(self):
-        def mul(a, b):
-            return a * b
-
         async def gen():
             yield 1
             yield 2
             yield 4
 
-        it = ait.accumulate(gen(), func=mul)
+        it = ait.accumulate(gen(), func=operator.mul)
         for k in [1, 2, 8]:
             self.assertEqual(await ait.next(it), k)
         with self.assertRaises(StopAsyncIteration):
@@ -74,6 +69,14 @@ class ItertoolsTest(TestCase):
             self.assertEqual(await ait.next(it), k)
         with self.assertRaises(StopAsyncIteration):
             await ait.next(it)
+
+    @async_test
+    async def test_accumulate_empty(self):
+        values = []
+        async for value in ait.accumulate([]):
+            values.append(value)
+
+        self.assertEqual(values, [])
 
     @async_test
     async def test_chain_lists(self):
@@ -210,6 +213,14 @@ class ItertoolsTest(TestCase):
             self.assertEqual(await ait.next(it), k)
 
     @async_test
+    async def test_dropwhile_empty(self):
+        def pred(x):
+            return x < 2
+
+        result = await ait.list(ait.dropwhile(pred, []))
+        self.assertEqual(result, [])
+
+    @async_test
     async def test_dropwhile_function_list(self):
         def pred(x):
             return x < 2
@@ -328,6 +339,23 @@ class ItertoolsTest(TestCase):
             self.assertEqual(await ait.next(it), k)
         with self.assertRaises(StopAsyncIteration):
             await ait.next(it)
+
+    @async_test
+    async def test_islice_bad_range(self):
+        with self.assertRaisesRegex(ValueError, "must pass stop index"):
+            async for _ in ait.islice([1, 2]):
+                pass
+
+        with self.assertRaisesRegex(ValueError, "too many arguments"):
+            async for _ in ait.islice([1, 2], 1, 2, 3, 4):
+                pass
+
+    @async_test
+    async def test_islice_stop_zero(self):
+        values = []
+        async for value in ait.islice(range(5), 0):
+            values.append(value)
+        self.assertEqual(values, [])
 
     @async_test
     async def test_islice_range_stop(self):
@@ -533,6 +561,14 @@ class ItertoolsTest(TestCase):
             self.assertEqual(await ait.next(it), k)
         with self.assertRaises(StopAsyncIteration):
             await ait.next(it)
+
+    @async_test
+    async def test_takewhile_empty(self):
+        def pred(x):
+            return x < 3
+
+        values = await ait.list(ait.takewhile(pred, []))
+        self.assertEqual(values, [])
 
     @async_test
     async def test_takewhile_function_list(self):

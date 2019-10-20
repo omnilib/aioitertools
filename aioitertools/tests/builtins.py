@@ -115,6 +115,13 @@ class BuiltinsTest(TestCase):
         with self.assertRaises(StopAsyncIteration):
             await ait.next(it)
 
+        it = iter(slist)
+        self.assertEqual(await ait.next(it), "A")
+        self.assertEqual(await ait.next(it), "B")
+        self.assertEqual(await ait.next(it), "C")
+        with self.assertRaises(StopAsyncIteration):
+            await ait.next(it)
+
     @async_test
     async def test_next_async_generator(self):
         async def async_gen():

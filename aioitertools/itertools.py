@@ -241,14 +241,14 @@ async def filterfalse(
 
 # pylint: disable=undefined-variable,multiple-statements
 @overload
-def groupby(itr: AnyIterable[T]) -> AsyncIterator[Tuple[T, List[T]]]:
+def groupby(itr: AnyIterable[T]) -> AsyncIterator[Tuple[T, List[T]]]:  # pragma: nocover
     pass
 
 
 @overload
 def groupby(
     itr: AnyIterable[T], key: KeyFunction[T, R]
-) -> AsyncIterator[Tuple[R, List[T]]]:
+) -> AsyncIterator[Tuple[R, List[T]]]:  # pragma: nocover
     pass
 
 
@@ -297,14 +297,16 @@ async def groupby(
 
 # pylint: disable=undefined-variable,multiple-statements
 @overload
-def islice(itr: AnyIterable[T], __stop: Optional[int]) -> AsyncIterator[T]:
+def islice(
+    itr: AnyIterable[T], __stop: Optional[int]
+) -> AsyncIterator[T]:  # pragma: nocover
     pass
 
 
 @overload
 def islice(
     itr: AnyIterable[T], __start: int, __stop: Optional[int], __step: int = 1
-) -> AsyncIterator[T]:
+) -> AsyncIterator[T]:  # pragma: nocover
     pass
 
 
@@ -343,6 +345,8 @@ async def islice(itr: AnyIterable[T], *args: Optional[int]) -> AsyncIterator[T]:
         start, stop = args  # type: ignore
     elif len(args) == 3:
         start, stop, step = args  # type: ignore
+    else:
+        raise ValueError("too many arguments given")
     assert start >= 0 and (stop is None or stop >= 0) and step >= 0
     step = max(1, step)
 

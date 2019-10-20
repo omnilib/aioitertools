@@ -23,8 +23,8 @@ class AsyncioTest(TestCase):
             await asyncio.sleep(duration)
             return number
 
-        pairs = [(1, 0.3), (2, 0.1), (3, 0.5), (4, 0.4), (5, 0.2)]
-        expected = [2, 5, 1, 4, 3]
+        pairs = [(1, 0.3), (2, 0.1), (3, 0.5)]
+        expected = [2, 1, 3]
 
         futures = [sleepy(*pair) for pair in pairs]
         results = await ait.list(aio.as_completed(futures))
@@ -35,3 +35,18 @@ class AsyncioTest(TestCase):
         async for value in aio.as_completed(futures):
             results.append(value)
         self.assertEqual(results, expected)
+
+    @async_test
+    async def test_as_completed_timeout(self):
+        calls = [(1.0,), (0.1,)]
+
+        futures = [asyncio.sleep(*args) for args in calls]
+        with self.assertRaises(asyncio.TimeoutError):
+            await ait.list(aio.as_completed(futures, timeout=0.5))
+
+        futures = [asyncio.sleep(*args) for args in calls]
+        results = 0
+        with self.assertRaises(asyncio.TimeoutError):
+            async for _ in aio.as_completed(futures, timeout=0.5):
+                results += 1
+        self.assertEqual(results, 1)

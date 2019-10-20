@@ -72,7 +72,11 @@ async def next(itr: AnyIterator[T]) -> T:
     """
     if isinstance(itr, AsyncIterator):
         return await itr.__anext__()
-    return builtins.next(itr)
+
+    try:
+        return builtins.next(itr)
+    except StopIteration:
+        raise StopAsyncIteration
 
 
 async def list(itr: AnyIterable[T]) -> List[T]:
@@ -158,21 +162,21 @@ async def sum(itr: AnyIterable[T], start: T = None) -> T:
 
 # pylint: disable=undefined-variable,multiple-statements,too-many-arguments
 @overload
-def zip(__iter1: AnyIterable[T1]) -> AsyncIterator[Tuple[T1]]:
+def zip(__iter1: AnyIterable[T1]) -> AsyncIterator[Tuple[T1]]:  # pragma: no cover
     pass
 
 
 @overload
 def zip(
     __iter1: AnyIterable[T1], __iter2: AnyIterable[T2]
-) -> AsyncIterator[Tuple[T1, T2]]:
+) -> AsyncIterator[Tuple[T1, T2]]:  # pragma: no cover
     pass
 
 
 @overload
 def zip(
     __iter1: AnyIterable[T1], __iter2: AnyIterable[T2], __iter3: AnyIterable[T3]
-) -> AsyncIterator[Tuple[T1, T2, T3]]:
+) -> AsyncIterator[Tuple[T1, T2, T3]]:  # pragma: no cover
     pass
 
 
@@ -182,7 +186,7 @@ def zip(
     __iter2: AnyIterable[T2],
     __iter3: AnyIterable[T3],
     __iter4: AnyIterable[T4],
-) -> AsyncIterator[Tuple[T1, T2, T3, T4]]:
+) -> AsyncIterator[Tuple[T1, T2, T3, T4]]:  # pragma: no cover
     pass
 
 
@@ -193,7 +197,7 @@ def zip(
     __iter3: AnyIterable[T3],
     __iter4: AnyIterable[T4],
     __iter5: AnyIterable[T5],
-) -> AsyncIterator[Tuple[T1, T2, T3, T4, T5]]:
+) -> AsyncIterator[Tuple[T1, T2, T3, T4, T5]]:  # pragma: no cover
     pass
 
 
@@ -206,7 +210,7 @@ def zip(
     __iter5: AnyIterable[Any],
     __iter6: AnyIterable[Any],
     *__iterables: AnyIterable[Any]
-) -> AsyncIterator[Tuple[Any, ...]]:
+) -> AsyncIterator[Tuple[Any, ...]]:  # pragma: no cover
     pass
 
 
