@@ -1,7 +1,7 @@
 aioitertools
 ============
 
-itertools for AsyncIO and mixed iterables.
+Implementation of itertools, builtins, and more for AsyncIO and mixed-type iterables.
 
 [![build status](https://github.com/jreese/aioitertools/workflows/Build/badge.svg)](https://github.com/jreese/aioitertools/actions)
 [![code coverage](https://img.shields.io/codecov/c/gh/jreese/aioitertools)](https://codecov.io/gh/jreese/aioitertools)
@@ -16,7 +16,7 @@ Install
 aioitertools requires Python 3.6 or newer.
 You can install it from PyPI:
 
-    $ pip3 install aioitertools
+    $ pip install aioitertools
 
 
 Usage
@@ -72,7 +72,7 @@ async for value in islice(generator1(), 2, None, 2):
 ```
 
 
-See [builtins.py][builtins] and [itertools.py][itertools] for full documentation
+See [builtins.py][] and [itertools.py][] for full documentation
 of functions and abilities.
 
 
@@ -85,5 +85,5 @@ source license.  This is my personal repository; the license you receive to
 my code is from me and not from my employer. See the `LICENSE` file for details.
 
 
-[builtins]: https://github.com/jreese/aioitertools/blob/master/aioitertools/builtins.py
-[itertools]: https://github.com/jreese/aioitertools/blob/master/aioitertools/itertools.py
+[builtins.py]: https://github.com/jreese/aioitertools/blob/master/aioitertools/builtins.py
+[itertools.py]: https://github.com/jreese/aioitertools/blob/master/aioitertools/itertools.py
