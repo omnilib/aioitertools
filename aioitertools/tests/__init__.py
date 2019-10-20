@@ -3,5 +3,5 @@
 
 from .asyncio import AsyncioTest
 from .builtins import BuiltinsTest
-from .itertools import ItertoolsTest
 from .helpers import HelpersTest
+from .itertools import ItertoolsTest

@@ -27,7 +27,7 @@ from typing import (
 )
 
 from .helpers import maybe_await
-from .types import AnyIterable, AnyIterator, AnyStop, T, R, T1, T2, T3, T4, T5
+from .types import T1, T2, T3, T4, T5, AnyIterable, AnyIterator, AnyStop, R, T
 
 
 def iter(itr: AnyIterable[T]) -> AsyncIterator[T]:

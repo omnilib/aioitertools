@@ -9,7 +9,8 @@ Provisional library.  Must be imported as `aioitertools.asyncio`.
 
 import asyncio
 import time
-from typing import Iterable, Awaitable, Optional, Set
+from typing import Awaitable, Iterable, Optional, Set
+
 from .types import AsyncIterator, T
 
 

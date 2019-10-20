@@ -4,6 +4,7 @@
 import asyncio
 import functools
 from unittest import TestCase
+
 from aioitertools.helpers import maybe_await
 
 

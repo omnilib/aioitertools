@@ -28,10 +28,10 @@ from .types import (
     AnyIterableIterable,
     AnyStop,
     KeyFunction,
+    N,
     Predicate,
     R,
     T,
-    N,
 )
 
 

@@ -2,12 +2,12 @@
 # Licensed under the MIT license
 
 from typing import (
-    Callable,
-    Iterable,
-    Iterator,
     AsyncIterable,
     AsyncIterator,
     Awaitable,
+    Callable,
+    Iterable,
+    Iterator,
     TypeVar,
     Union,
 )
