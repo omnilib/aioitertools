@@ -1,31 +1,34 @@
 build:
-	python3 setup.py build
+	python setup.py build
 
 dev:
-	python3 setup.py develop
+	python setup.py develop
 
 setup:
-	pip3 install -U black mypy pylint twine
+	python -m pip install -Ur requirements-dev.txt
 
 venv:
-	python3 -m venv .venv
+	python -m venv .venv
 	source .venv/bin/activate && make setup dev
 	echo 'run `source .venv/bin/activate` to use virtualenv'
 
 release: lint test clean
-	python3 setup.py sdist
-	python3 -m twine upload dist/*
+	python setup.py sdist
+	python -m twine upload dist/*
 
-black:
-	black aioitertools setup.py
+format:
+	python -m isort --apply --recursive aioitertools setup.py
+	python -m black aioitertools setup.py
 
 lint:
-	-mypy --ignore-missing-imports --python-version 3.6 .
-	pylint --rcfile .pylint aioitertools setup.py
-	black --check aioitertools setup.py
+	python -m pylint --rcfile .pylint aioitertools setup.py
+	python -m isort --diff --recursive aioitertools setup.py
+	python -m black --check aioitertools setup.py
 
 test:
-	python3 -m unittest -v aioitertools.tests
+	python -m coverage run -m aioitertools.tests
+	python -m coverage report
+	python -m mypy aioitertools
 
 clean:
 	rm -rf build dist README MANIFEST *.egg-info
