@@ -530,16 +530,17 @@ async def zip_longest(
     """
     its: List[AsyncIterator[Any]] = [iter(itr) for itr in itrs]
     itr_count = len(its)
+    finished = 0
 
     while True:
         values = await asyncio.gather(
             *[it.__anext__() for it in its], return_exceptions=True
         )
-        finished = 0
         for idx, value in builtins.enumerate(values):
             if isinstance(value, AnyStop):
                 finished += 1
                 values[idx] = fillvalue
+                its[idx] = repeat(fillvalue)
             elif isinstance(value, BaseException):
                 raise value
         if finished >= itr_count:

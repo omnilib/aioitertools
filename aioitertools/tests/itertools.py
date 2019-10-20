@@ -679,3 +679,20 @@ class ItertoolsTest(TestCase):
             self.assertEqual(await ait.next(it), k)
         with self.assertRaises(StopAsyncIteration):
             await ait.next(it)
+
+    @async_test
+    async def test_zip_longest_exception(self):
+        async def gen():
+            yield 1
+            yield 2
+            raise Exception("fake error")
+
+        a = gen()
+        b = ait.repeat(5)
+
+        it = ait.zip_longest(a, b)
+
+        for k in [(1, 5), (2, 5)]:
+            self.assertEqual(await ait.next(it), k)
+        with self.assertRaisesRegex(Exception, "fake error"):
+            await ait.next(it)
