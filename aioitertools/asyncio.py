@@ -9,13 +9,13 @@ Provisional library.  Must be imported as `aioitertools.asyncio`.
 
 import asyncio
 import time
-from typing import Awaitable, Iterable, Optional, Set
+from typing import Any, Awaitable, Dict, Iterable, List, Optional, Set, Union, cast
 
 from .types import AsyncIterator, T
 
 
 async def as_completed(
-    aws: Iterable[Awaitable[T]],
+    aws: Iterable[Union[asyncio.Future, Awaitable[T]]],
     *,
     loop: Optional[asyncio.AbstractEventLoop] = None,
     timeout: Optional[float] = None
@@ -32,8 +32,12 @@ async def as_completed(
             ...  # use value immediately
 
     """
-    done: Set[Awaitable[T]] = set()
-    pending: Set[Awaitable[T]] = set(aws)
+    done: Set[asyncio.Future[T]] = set()
+    tmp: Set[asyncio.Future[T]]
+
+    # Basically _FutureT from typeshed asyncio/tasks.pyi; we have to define this
+    # longhand or it ends up with Any instead of T
+    pending: Set[Union[asyncio.Future, Awaitable[T]]] = set(aws)
     remaining: Optional[float] = None
 
     if timeout and timeout > 0:
@@ -47,9 +51,14 @@ async def as_completed(
             if remaining <= 0:
                 raise asyncio.TimeoutError()
 
-        done, pending = await asyncio.wait(  # type: ignore # bad annotation upstream
+        done, tmp = await asyncio.wait(
             pending, loop=loop, timeout=remaining, return_when=asyncio.FIRST_COMPLETED
         )
+
+        # in mypy at least, you can't assign an Set[A] to a Set[Union[A, B]]
+        # without an error.  This cast allows us to do so while still retaining
+        # type checks everywhere else.
+        pending = cast(Set[Union[asyncio.Future, Awaitable[T]]], tmp)
 
         for item in done:
             yield await item
