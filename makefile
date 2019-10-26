@@ -1,3 +1,13 @@
+PYTHON?=python
+
+venv:
+	$(PYTHON) -m venv .venv
+	source .venv/bin/activate && make setup dev
+	echo 'run `source .venv/bin/activate` to use virtualenv'
+
+# The rest of these are intended to be run within the venv, where python points
+# to whatever was used to set up the venv.
+#
 build:
 	python setup.py build
 
@@ -6,11 +16,6 @@ dev:
 
 setup:
 	python -m pip install -Ur requirements-dev.txt
-
-venv:
-	python -m venv .venv
-	source .venv/bin/activate && make setup dev
-	echo 'run `source .venv/bin/activate` to use virtualenv'
 
 release: lint test clean
 	python setup.py sdist
