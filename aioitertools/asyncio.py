@@ -9,7 +9,7 @@ Provisional library.  Must be imported as `aioitertools.asyncio`.
 
 import asyncio
 import time
-from typing import Awaitable, Iterable, Optional, Set
+from typing import Awaitable, Iterable, Optional, Set, Tuple, cast
 
 from .types import AsyncIterator, T
 
@@ -47,8 +47,21 @@ async def as_completed(
             if remaining <= 0:
                 raise asyncio.TimeoutError()
 
-        done, pending = await asyncio.wait(  # type: ignore # bad annotation upstream
-            pending, loop=loop, timeout=remaining, return_when=asyncio.FIRST_COMPLETED
+        # asyncio.Future inherits from typing.Awaitable
+        # asyncio.wait takes Iterable[Union[Future, Generator, Awaitable]], but
+        # returns Tuple[Set[Future], Set[Future]. Because mypy doesn't like assigning
+        # these values to existing Set[Awaitable] or even Set[Union[Awaitable, Future]],
+        # we need to first cast the results to something that we can actually use
+        # asyncio.Future: https://github.com/python/typeshed/blob/72ff7b94e534c610ddf8939bacbc55343e9465d2/stdlib/3/asyncio/futures.pyi#L30
+        # asyncio.wait(): https://github.com/python/typeshed/blob/72ff7b94e534c610ddf8939bacbc55343e9465d2/stdlib/3/asyncio/tasks.pyi#L89
+        done, pending = cast(
+            Tuple[Set[Awaitable[T]], Set[Awaitable[T]]],
+            await asyncio.wait(
+                pending,
+                loop=loop,
+                timeout=remaining,
+                return_when=asyncio.FIRST_COMPLETED,
+            ),
         )
 
         for item in done:
