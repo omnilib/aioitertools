@@ -7,6 +7,7 @@ v0.5.1
 Documentation Release v0.5.1
 
 - Include changelog, code of conduct, and contributers guide in sdist
+- Include wheels when building release distributions
 
 
 v0.5.0
