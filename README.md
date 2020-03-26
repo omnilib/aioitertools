@@ -72,8 +72,8 @@ async for value in islice(generator1(), 2, None, 2):
 ```
 
 
-See [builtins.py][] and [itertools.py][] for full documentation
-of functions and abilities.
+See [builtins.py][], [itertools.py][], and [more_itertools.py][] for full
+documentation of functions and abilities.
 
 
 License
