@@ -10,7 +10,7 @@ with open("aioitertools/__init__.py", encoding="utf8") as f:
 
 setup(
     name="aioitertools",
-    description="asyncio version of the standard multiprocessing module",
+    description="itertools and builtins for AsyncIO and mixed iterables",
     long_description=readme,
     long_description_content_type="text/markdown",
     version=version,
