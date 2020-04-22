@@ -1,8 +1,8 @@
 build:
-	python setup.py build
+	flit build
 
 dev:
-	python setup.py develop
+	flit install --symlink
 
 setup:
 	python -m pip install -Ur requirements-dev.txt
@@ -13,17 +13,16 @@ venv:
 	echo 'run `source .venv/bin/activate` to use virtualenv'
 
 release: lint test clean
-	python setup.py sdist bdist_wheel
-	python -m twine upload dist/*
+	flit publish
 
 format:
-	python -m isort --apply --recursive aioitertools setup.py
-	python -m black aioitertools setup.py
+	python -m isort --apply --recursive aioitertools
+	python -m black aioitertools
 
 lint:
-	python -m pylint --rcfile .pylint aioitertools setup.py
-	python -m isort --diff --recursive aioitertools setup.py
-	python -m black --check aioitertools setup.py
+	python -m pylint --rcfile .pylint aioitertools
+	python -m isort --diff --recursive aioitertools
+	python -m black --check aioitertools
 
 test:
 	python -m coverage run -m aioitertools.tests
@@ -32,3 +31,6 @@ test:
 
 clean:
 	rm -rf build dist README MANIFEST *.egg-info
+
+distclean: clean
+	rm -rf .venv
