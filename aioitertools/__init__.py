@@ -2,7 +2,7 @@
 # Licensed under the MIT license
 
 """
-itertools for AsyncIO and mixed iterables
+itertools and builtins for AsyncIO and mixed iterables
 """
 
 __author__ = "John Reese"
