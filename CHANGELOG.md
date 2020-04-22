@@ -1,6 +1,21 @@
 aioitertools
 ============
 
+v0.6.1
+------
+
+Metadata fix
+
+- Corrected description field for PyPI
+- Switched from setuptools to flit for build/publish
+
+```
+$ git shortlog -s v0.6.0...v0.6.1
+     1	Dima Tisnek
+     5	John Reese
+```
+
+
 v0.6.0
 ------
 
