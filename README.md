@@ -3,10 +3,10 @@ aioitertools
 
 Implementation of itertools, builtins, and more for AsyncIO and mixed-type iterables.
 
-[![build status](https://github.com/jreese/aioitertools/workflows/Build/badge.svg)](https://github.com/jreese/aioitertools/actions)
-[![code coverage](https://img.shields.io/codecov/c/gh/jreese/aioitertools)](https://codecov.io/gh/jreese/aioitertools)
+[![build status](https://github.com/omnilib/aioitertools/workflows/Build/badge.svg)](https://github.com/omnilib/aioitertools/actions)
+[![code coverage](https://img.shields.io/codecov/c/gh/omnilib/aioitertools)](https://codecov.io/gh/omnilib/aioitertools)
 [![version](https://img.shields.io/pypi/v/aioitertools.svg)](https://pypi.org/project/aioitertools)
-[![license](https://img.shields.io/pypi/l/aioitertools.svg)](https://github.com/jreese/aioitertools/blob/master/LICENSE)
+[![license](https://img.shields.io/pypi/l/aioitertools.svg)](https://github.com/omnilib/aioitertools/blob/master/LICENSE)
 [![code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 
@@ -85,6 +85,6 @@ source license.  This is my personal repository; the license you receive to
 my code is from me and not from my employer. See the `LICENSE` file for details.
 
 
-[builtins.py]: https://github.com/jreese/aioitertools/blob/master/aioitertools/builtins.py
-[itertools.py]: https://github.com/jreese/aioitertools/blob/master/aioitertools/itertools.py
-[more_itertools.py]: https://github.com/jreese/aioitertools/blob/master/aioitertools/more_itertools.py
+[builtins.py]: https://github.com/omnilib/aioitertools/blob/master/aioitertools/builtins.py
+[itertools.py]: https://github.com/omnilib/aioitertools/blob/master/aioitertools/itertools.py
+[more_itertools.py]: https://github.com/omnilib/aioitertools/blob/master/aioitertools/more_itertools.py
