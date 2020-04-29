@@ -87,3 +87,4 @@ my code is from me and not from my employer. See the `LICENSE` file for details.
 
 [builtins.py]: https://github.com/jreese/aioitertools/blob/master/aioitertools/builtins.py
 [itertools.py]: https://github.com/jreese/aioitertools/blob/master/aioitertools/itertools.py
+[more_itertools.py]: https://github.com/jreese/aioitertools/blob/master/aioitertools/more_itertools.py
