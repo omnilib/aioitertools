@@ -1,6 +1,19 @@
 aioitertools
 ============
 
+v0.7.0
+------
+
+Feature release
+
+- Add `min()` and `max()` to builtins
+
+```
+$ git shortlog -s v0.6.1...v0.7.0
+     7	John Reese
+```
+
+
 v0.6.1
 ------
 
@@ -12,7 +25,7 @@ Metadata fix
 ```
 $ git shortlog -s v0.6.0...v0.6.1
      1	Dima Tisnek
-     5	John Reese
+     6	John Reese
 ```
 
 
