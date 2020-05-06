@@ -205,6 +205,76 @@ class BuiltinsTest(TestCase):
             self.assertEqual(value, slist[idx] * 2)
             idx += 1
 
+    # aioitertools.max()
+
+    @async_test
+    async def test_max_basic(self):
+        async def gen():
+            for item in slist:
+                yield item
+
+        self.assertEqual(await ait.max(gen()), "C")
+        self.assertEqual(await ait.max(range(4)), 3)
+
+        with self.assertRaisesRegex(ValueError, "iterable is empty"):
+            await ait.max([])
+
+        with self.assertRaisesRegex(ValueError, "kwarg .+ not supported"):
+            await ait.max(None, foo="foo")
+
+    @async_test
+    async def test_max_default(self):
+        self.assertEqual(await ait.max(range(2), default="x"), 1)
+        self.assertEqual(await ait.max([], default="x"), "x")
+        self.assertEqual(await ait.max([], default=None), None)
+
+    @async_test
+    async def test_max_key(self):
+        words = ["star", "buzz", "guard"]
+
+        def reverse(s):
+            return s[::-1]
+
+        self.assertEqual(reverse("python"), "nohtyp")
+
+        self.assertEqual(await ait.max(words), "star")
+        self.assertEqual(await ait.max(words, key=reverse), "buzz")
+
+    # aioitertools.min()
+
+    @async_test
+    async def test_min_basic(self):
+        async def gen():
+            for item in slist:
+                yield item
+
+        self.assertEqual(await ait.min(gen()), "A")
+        self.assertEqual(await ait.min(range(4)), 0)
+
+        with self.assertRaisesRegex(ValueError, "iterable is empty"):
+            await ait.min([])
+
+        with self.assertRaisesRegex(ValueError, "kwarg .+ not supported"):
+            await ait.min(None, foo="foo")
+
+    @async_test
+    async def test_min_default(self):
+        self.assertEqual(await ait.min(range(2), default="x"), 0)
+        self.assertEqual(await ait.min([], default="x"), "x")
+        self.assertEqual(await ait.min([], default=None), None)
+
+    @async_test
+    async def test_min_key(self):
+        words = ["star", "buzz", "guard"]
+
+        def reverse(s):
+            return s[::-1]
+
+        self.assertEqual(reverse("python"), "nohtyp")
+
+        self.assertEqual(await ait.min(words), "buzz")
+        self.assertEqual(await ait.min(words, key=reverse), "guard")
+
     # aioitertools.sum()
 
     @async_test

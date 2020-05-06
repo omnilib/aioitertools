@@ -9,7 +9,7 @@ __author__ = "John Reese"
 __version__ = "0.6.1"
 
 from . import asyncio
-from .builtins import enumerate, iter, list, map, next, set, sum, zip
+from .builtins import enumerate, iter, list, map, max, min, next, set, sum, zip
 from .itertools import (
     accumulate,
     chain,

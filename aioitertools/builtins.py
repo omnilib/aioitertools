@@ -20,13 +20,15 @@ from typing import (
     Callable,
     Iterable,
     List,
+    Optional,
     Set,
     Tuple,
+    Union,
     cast,
     overload,
 )
 
-from .helpers import maybe_await
+from .helpers import Orderable, maybe_await
 from .types import T1, T2, T3, T4, T5, AnyIterable, AnyIterator, AnyStop, R, T
 
 
@@ -138,6 +140,124 @@ async def map(fn: Callable[[T], R], itr: AnyIterable[T]) -> AsyncIterator[R]:
         yield await maybe_await(fn(item))
 
 
+@overload
+async def max(
+    itr: AnyIterable[Orderable], *, key: Optional[Callable] = None,
+) -> Orderable:  # pragma: no cover
+    pass
+
+
+@overload
+async def max(
+    itr: AnyIterable[Orderable], *, default: T, key: Optional[Callable] = None,
+) -> Union[Orderable, T]:  # pragma: no cover
+    pass
+
+
+async def max(itr: AnyIterable[Orderable], **kwargs: Any) -> Any:
+    """
+    Return the largest item in an iterable or the largest of two or more arguments.
+
+    Example:
+
+        await min(range(5))
+        -> 4
+
+    """
+    for k in kwargs:
+        if k not in ("key", "default"):
+            raise ValueError(f"kwarg {k} not supported")
+
+    value: Orderable
+    vkey: Any
+
+    keyfunc = kwargs.get("key", None)
+    it = iter(itr)
+
+    try:
+        value = await next(it)
+        if keyfunc:
+            vkey = keyfunc(value)
+
+    except StopAsyncIteration:
+        if "default" in kwargs:
+            return kwargs["default"]
+        raise ValueError("iterable is empty and no default value given")
+
+    if keyfunc:
+        async for item in it:
+            ikey = keyfunc(item)
+            if ikey > vkey:
+                value = item
+                vkey = ikey
+
+    else:
+        async for item in it:
+            if item > value:
+                value = item
+
+    return value
+
+
+@overload
+async def min(
+    itr: AnyIterable[Orderable], *, key: Optional[Callable] = None,
+) -> Orderable:  # pragma: no cover
+    pass
+
+
+@overload
+async def min(
+    itr: AnyIterable[Orderable], *, default: T, key: Optional[Callable] = None,
+) -> Union[Orderable, T]:  # pragma: no cover
+    pass
+
+
+async def min(itr: AnyIterable[Orderable], **kwargs: Any) -> Any:
+    """
+    Return the smallest item in an iterable or the smallest of two or more arguments.
+
+    Example:
+
+        await min(range(5))
+        -> 0
+
+    """
+    for k in kwargs:
+        if k not in ("key", "default"):
+            raise ValueError(f"kwarg {k} not supported")
+
+    value: Orderable
+    vkey: Any
+
+    keyfunc = kwargs.get("key", None)
+    it = iter(itr)
+
+    try:
+        value = await next(it)
+        if keyfunc:
+            vkey = keyfunc(value)
+
+    except StopAsyncIteration:
+        if "default" in kwargs:
+            return kwargs["default"]
+        raise ValueError("iterable is empty and no default value given")
+
+    if keyfunc:
+        async for item in it:
+            ikey = keyfunc(item)
+            if ikey < vkey:
+                value = item
+                vkey = ikey
+
+    else:
+        async for item in it:
+            if item < value:
+                value = item
+
+    return value
+
+
 async def sum(itr: AnyIterable[T], start: T = None) -> T:
     """
     Compute the sum of a mixed iterable, adding each value with the start value.
@@ -209,7 +329,7 @@ def zip(
     __iter4: AnyIterable[Any],
     __iter5: AnyIterable[Any],
     __iter6: AnyIterable[Any],
-    *__iterables: AnyIterable[Any]
+    *__iterables: AnyIterable[Any],
 ) -> AsyncIterator[Tuple[Any, ...]]:  # pragma: no cover
     pass
 
