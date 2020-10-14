@@ -141,7 +141,8 @@ disable=print-statement,
         unused-argument,
         missing-docstring,
         function-redefined,
-        line-too-long
+        line-too-long,
+        raise-missing-from
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
