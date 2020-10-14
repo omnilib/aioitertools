@@ -142,14 +142,14 @@ async def map(fn: Callable[[T], R], itr: AnyIterable[T]) -> AsyncIterator[R]:
 
 @overload
 async def max(
-    itr: AnyIterable[Orderable], *, key: Optional[Callable] = None,
+    itr: AnyIterable[Orderable], *, key: Optional[Callable] = None
 ) -> Orderable:  # pragma: no cover
     pass
 
 
 @overload
 async def max(
-    itr: AnyIterable[Orderable], *, default: T, key: Optional[Callable] = None,
+    itr: AnyIterable[Orderable], *, default: T, key: Optional[Callable] = None
 ) -> Union[Orderable, T]:  # pragma: no cover
     pass
 
@@ -201,14 +201,14 @@ async def max(itr: AnyIterable[Orderable], **kwargs: Any) -> Any:
 
 @overload
 async def min(
-    itr: AnyIterable[Orderable], *, key: Optional[Callable] = None,
+    itr: AnyIterable[Orderable], *, key: Optional[Callable] = None
 ) -> Orderable:  # pragma: no cover
     pass
 
 
 @overload
 async def min(
-    itr: AnyIterable[Orderable], *, default: T, key: Optional[Callable] = None,
+    itr: AnyIterable[Orderable], *, default: T, key: Optional[Callable] = None
 ) -> Union[Orderable, T]:  # pragma: no cover
     pass
 
