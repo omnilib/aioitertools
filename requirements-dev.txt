@@ -3,7 +3,7 @@ codecov==2.0.22
 coverage[toml]==5.1
 flit==2.3.0
 isort==4.3.20
-mypy==0.770
+mypy==0.790
 pylint==2.4.4
 sphinx==3.0.3
 git+https://github.com/miyakogi/m2r
