@@ -279,7 +279,10 @@ async def groupby(
     grouping: List[T] = []
 
     it = iter(itr)
-    item = await next(it)
+    try:
+        item = await next(it)
+    except StopAsyncIteration:
+        return
     grouping = [item]
 
     j = await maybe_await(key(item))
