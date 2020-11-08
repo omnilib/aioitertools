@@ -341,6 +341,15 @@ class ItertoolsTest(TestCase):
             await ait.next(it)
 
     @async_test
+    async def test_groupby_empty(self):
+        async def gen():
+            for _ in range(0):
+                yield  # Force generator with no actual iteration
+
+        async for _ in ait.groupby(gen()):
+            self.fail("No iteration should have happened")
+
+    @async_test
     async def test_islice_bad_range(self):
         with self.assertRaisesRegex(ValueError, "must pass stop index"):
             async for _ in ait.islice([1, 2]):
