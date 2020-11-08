@@ -18,12 +18,12 @@ release: lint test clean
 	flit publish
 
 format:
-	python -m isort --apply --recursive aioitertools
+	python -m usort format aioitertools
 	python -m black aioitertools
 
 lint:
 	python -m pylint --rcfile .pylint aioitertools
-	python -m isort --diff --recursive aioitertools
+	python -m usort check aioitertools
 	python -m black --check aioitertools
 
 test:

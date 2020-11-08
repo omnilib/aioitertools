@@ -6,7 +6,6 @@ from typing import AsyncIterator
 from unittest import TestCase
 
 import aioitertools as ait
-
 from .helpers import async_test
 
 slist = ["A", "B", "C"]

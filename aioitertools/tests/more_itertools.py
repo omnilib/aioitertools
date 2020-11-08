@@ -5,7 +5,6 @@ from typing import AsyncIterable
 from unittest import TestCase
 
 import aioitertools.more_itertools as mit
-
 from .helpers import async_test
 
 
