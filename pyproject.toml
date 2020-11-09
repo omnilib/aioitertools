@@ -27,6 +27,11 @@ exclude = [
     ".github/",
 ]
 
+[tool.attribution]
+name = "aioitertools"
+package = "aioitertools"
+version_file = true
+
 [tool.coverage.run]
 branch = true
 include = ["aioitertools/*"]
