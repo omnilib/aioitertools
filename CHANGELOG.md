@@ -1,6 +1,22 @@
 aioitertools
 ============
 
+v0.7.1
+------
+
+Bugfix release:
+
+* Fix groupby() not working with empty iterables (#39)
+* Tested on Python 3.9
+
+```
+$ git shortlog -s v0.7.0...v0.7.1
+     8	John Reese
+     1	Roger Aiudi
+     2	pyup-bot
+```
+
+
 v0.7.0
 ------
 
@@ -163,5 +179,4 @@ Initial feature release:
 $ git shortlog -s ce32bdb1777f84e8f64b9470d81b84b754389dd9...v0.1.0
      1	John Reese
 ```
-
 
