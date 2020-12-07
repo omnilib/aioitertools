@@ -13,6 +13,7 @@ use with `await`, `async for`, etc.
 
 import asyncio
 import builtins
+from enum import Enum
 from typing import (
     Any,
     AsyncIterable,
@@ -30,6 +31,10 @@ from typing import (
 
 from .helpers import Orderable, maybe_await
 from .types import T1, T2, T3, T4, T5, AnyIterable, AnyIterator, AnyStop, R, T
+
+
+class Sentinel(Enum):
+    MISSING = object()
 
 
 def iter(itr: AnyIterable[T]) -> AsyncIterator[T]:
@@ -60,7 +65,19 @@ def iter(itr: AnyIterable[T]) -> AsyncIterator[T]:
     return gen()
 
 
+@overload
 async def next(itr: AnyIterator[T]) -> T:
+    ...
+
+
+@overload
+async def next(itr: AnyIterator[T1], default: T2) -> Union[T1, T2]:
+    ...
+
+
+async def next(
+    itr: AnyIterator[T1], default: Union[T2, Sentinel] = Sentinel.MISSING
+) -> Union[T1, T2]:
     """
     Return the next item of any mixed iterator.
 
@@ -72,13 +89,18 @@ async def next(itr: AnyIterator[T]) -> T:
         value = await next(it)
 
     """
-    if isinstance(itr, AsyncIterator):
-        return await itr.__anext__()
-
     try:
-        return builtins.next(itr)
-    except StopIteration:
-        raise StopAsyncIteration
+        if isinstance(itr, AsyncIterator):
+            return await itr.__anext__()
+
+        try:
+            return builtins.next(itr)
+        except StopIteration:
+            raise StopAsyncIteration
+    except StopAsyncIteration:
+        if default is Sentinel.MISSING:
+            raise
+        return default
 
 
 async def list(itr: AnyIterable[T]) -> List[T]:

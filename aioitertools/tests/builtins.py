@@ -134,6 +134,21 @@ class BuiltinsTest(TestCase):
         with self.assertRaises(StopAsyncIteration):
             await ait.next(it)
 
+    @async_test
+    async def test_next_default_iterable(self):
+        it = iter(["A"])
+
+        self.assertEqual(await ait.next(it, "?"), "A")
+        # End of iteration
+        self.assertEqual(await ait.next(it, "?"), "?")
+
+    @async_test
+    async def test_next_default_async_iterable(self):
+        it = ait.iter(["A"])
+        self.assertEqual(await ait.next(it, "?"), "A")
+        # End of iteration
+        self.assertEqual(await ait.next(it, "?"), "?")
+
     # aioitertools.list()
 
     @async_test
