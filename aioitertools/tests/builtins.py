@@ -10,9 +10,58 @@ from .helpers import async_test
 
 slist = ["A", "B", "C"]
 srange = range(3)
+srange1 = range(1, 4)
+srange0 = range(1)
 
 
 class BuiltinsTest(TestCase):
+
+    # aioitertools.all()
+
+    @async_test
+    async def test_all_list(self):
+        self.assertTrue(await ait.all([True, 1, "string"]))
+        self.assertFalse(await ait.all([True, 0, "string"]))
+
+    @async_test
+    async def test_all_range(self):
+        self.assertTrue(await ait.all(srange1))
+        self.assertFalse(await ait.all(srange))
+
+    @async_test
+    async def test_all_generator(self):
+        self.assertTrue(await ait.all(x for x in srange1))
+        self.assertFalse(await ait.all(x for x in srange))
+
+    @async_test
+    async def test_all_async_generator(self):
+        self.assertTrue(await ait.all(ait.iter(srange1)))
+        self.assertFalse(await ait.all(ait.iter(srange)))
+
+    # aioitertools.any()
+
+    @async_test
+    async def test_any_list(self):
+        self.assertTrue(await ait.any([False, 1, ""]))
+        self.assertFalse(await ait.any([False, 0, ""]))
+
+    @async_test
+    async def test_any_range(self):
+        self.assertTrue(await ait.any(srange))
+        self.assertTrue(await ait.any(srange1))
+        self.assertFalse(await ait.any(srange0))
+
+    @async_test
+    async def test_any_generator(self):
+        self.assertTrue(await ait.any(x for x in srange))
+        self.assertTrue(await ait.any(x for x in srange1))
+        self.assertFalse(await ait.any(x for x in srange0))
+
+    @async_test
+    async def test_any_async_generator(self):
+        self.assertTrue(await ait.any(ait.iter(srange)))
+        self.assertTrue(await ait.any(ait.iter(srange1)))
+        self.assertFalse(await ait.any(ait.iter(srange0)))
 
     # aioitertools.iter()
 

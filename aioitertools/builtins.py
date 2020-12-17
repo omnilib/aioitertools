@@ -37,6 +37,38 @@ class Sentinel(Enum):
     MISSING = object()
 
 
+async def all(itr: AnyIterable[T]) -> bool:
+    """
+    Return True if all values are truthy in a mixed iterable, else False.
+
+    Example:
+
+        if await all(it):
+            ...
+
+    """
+    async for item in iter(itr):
+        if not item:
+            return False
+    return True
+
+
+async def any(itr: AnyIterable[T]) -> bool:
+    """
+    Return True if any value is truthy in a mixed iterable, else False.
+
+    Example:
+
+        if await any(it):
+            ...
+
+    """
+    async for item in iter(itr):
+        if item:
+            return True
+    return False
+
+
 def iter(itr: AnyIterable[T]) -> AsyncIterator[T]:
     """
     Get an async iterator from any mixed iterable.
