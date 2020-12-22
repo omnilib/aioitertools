@@ -30,16 +30,31 @@ from typing import (
 )
 
 from .helpers import Orderable, maybe_await
-from .types import T1, T2, T3, T4, T5, AnyIterable, AnyIterator, AnyStop, R, T
+from .types import (
+    T1,
+    T2,
+    T3,
+    T4,
+    T5,
+    AnyIterable,
+    AnyIterator,
+    AnyStop,
+    R,
+    T,
+    MaybeAwaitable,
+)
+from . import asyncio as ait_asyncio
 
 
 class Sentinel(Enum):
     MISSING = object()
 
 
-async def all(itr: AnyIterable[T]) -> bool:
+async def all(itr: AnyIterable[MaybeAwaitable[Any]]) -> bool:
     """
     Return True if all values are truthy in a mixed iterable, else False.
+    The iterable will be fully consumed and any awaitables will
+    automatically be awaited.
 
     Example:
 
@@ -47,15 +62,14 @@ async def all(itr: AnyIterable[T]) -> bool:
             ...
 
     """
-    async for item in iter(itr):
-        if not item:
-            return False
-    return True
+    return builtins.all(await ait_asyncio.gather_iter(itr))
 
 
-async def any(itr: AnyIterable[T]) -> bool:
+async def any(itr: AnyIterable[MaybeAwaitable[Any]]) -> bool:
     """
     Return True if any value is truthy in a mixed iterable, else False.
+    The iterable will be fully consumed and any awaitables will
+    automatically be awaited.
 
     Example:
 
@@ -63,10 +77,7 @@ async def any(itr: AnyIterable[T]) -> bool:
             ...
 
     """
-    async for item in iter(itr):
-        if item:
-            return True
-    return False
+    return builtins.any(await ait_asyncio.gather_iter(itr))
 
 
 def iter(itr: AnyIterable[T]) -> AsyncIterator[T]:

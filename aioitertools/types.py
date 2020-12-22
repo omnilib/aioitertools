@@ -29,3 +29,4 @@ AnyStop = (StopIteration, StopAsyncIteration)
 Accumulator = Union[Callable[[T, T], T], Callable[[T, T], Awaitable[T]]]
 KeyFunction = Union[Callable[[T], R], Callable[[T], Awaitable[R]]]
 Predicate = Union[Callable[[T], object], Callable[[T], Awaitable[object]]]
+MaybeAwaitable = Union[T, Awaitable[T]]
