@@ -29,6 +29,7 @@ from typing import (
     overload,
 )
 
+from . import asyncio as ait_asyncio  # pylint: disable=cyclic-import,reimported
 from .helpers import Orderable, maybe_await
 from .types import (
     T1,
@@ -43,7 +44,6 @@ from .types import (
     T,
     MaybeAwaitable,
 )
-from . import asyncio as ait_asyncio
 
 
 class Sentinel(Enum):
