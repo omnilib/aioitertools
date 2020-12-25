@@ -512,12 +512,12 @@ def tee(itr: AnyIterable[T], n: int = 2) -> Tuple[AsyncIterator[T], ...]:
 
         else:
             while True:
-                is_exception, value = await q.get()
+                is_exception, item = await q.get()
                 if is_exception:
-                    raise value
-                if value is sentinel:
+                    raise item
+                if item is sentinel:
                     break
-                yield value
+                yield item
 
     return tuple(gen(k, q) for k, q in builtins.enumerate(queues))
 
