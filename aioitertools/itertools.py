@@ -502,22 +502,22 @@ def tee(itr: AnyIterable[T], n: int = 2) -> Tuple[AsyncIterator[T], ...]:
         if k == 0:
             try:
                 async for value in iter(itr):
-                    await asyncio.gather(*[queue.put((False, value)) for queue in queues[1:]])
+                    await asyncio.gather(*[queue.put((None, value)) for queue in queues[1:]])
                     yield value
             except Exception as e:
-                await asyncio.gather(*[queue.put((True, e)) for queue in queues[1:]])
+                await asyncio.gather(*[queue.put((e, None)) for queue in queues[1:]])
                 raise
 
-            await asyncio.gather(*[queue.put((False, sentinel)) for queue in queues[1:]])
+            await asyncio.gather(*[queue.put((None, sentinel)) for queue in queues[1:]])
 
         else:
             while True:
-                is_exception, item = await q.get()
-                if is_exception:
-                    raise item
-                if item is sentinel:
+                error, value = await q.get()
+                if error is not None:
+                    raise error
+                if value is sentinel:
                     break
-                yield item
+                yield value
 
     return tuple(gen(k, q) for k, q in builtins.enumerate(queues))
 
