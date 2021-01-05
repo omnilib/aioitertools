@@ -8,7 +8,7 @@ author = "John Reese"
 author-email = "john@noswap.com"
 description-file = "README.md"
 home-page = "https://aioitertools.omnilib.dev"
-requires = ["typing_extensions>=3.7"]
+requires = ["typing_extensions>=3.7; python_version < '3.8'"]
 requires-python = ">=3.6"
 classifiers = [
     "Development Status :: 4 - Beta",
