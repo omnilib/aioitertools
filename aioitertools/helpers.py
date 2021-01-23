@@ -2,11 +2,15 @@
 # Licensed under the MIT license
 
 import inspect
+import sys
 from typing import Awaitable, Union
 
-from typing_extensions import Protocol
-
 from .types import T
+
+if sys.version_info < (3, 8):
+    from typing_extensions import Protocol
+else:
+    from typing import Protocol  # pylint: disable=no-name-in-module
 
 
 class Orderable(Protocol):  # pragma: no cover
