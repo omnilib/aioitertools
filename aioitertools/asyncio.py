@@ -11,7 +11,8 @@ import asyncio
 import time
 from typing import Any, Awaitable, Dict, Iterable, List, Optional, Set, Tuple, cast
 
-from .types import AsyncIterator, T
+from .builtins import maybe_await, iter as aiter
+from .types import AsyncIterator, MaybeAwaitable, AnyIterable, T
 
 
 async def as_completed(
@@ -129,3 +130,22 @@ async def gather(
             ret[lst[i]] = ret[lst[0]]
 
     return ret
+
+
+async def gather_iter(
+    itr: AnyIterable[MaybeAwaitable[T]],
+    loop: Optional[asyncio.AbstractEventLoop] = None,
+    return_exceptions: bool = False,
+    limit: int = -1,
+) -> List[T]:
+    """Wrapper around gather to handle gathering an iterable instead
+    of *args.
+
+    Note that the iterable values don't have to be awaitable.
+    """
+    return await gather(
+        *[maybe_await(i) async for i in aiter(itr)],
+        loop=loop,
+        return_exceptions=return_exceptions,
+        limit=limit,
+    )
