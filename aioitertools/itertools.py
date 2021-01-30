@@ -502,7 +502,9 @@ def tee(itr: AnyIterable[T], n: int = 2) -> Tuple[AsyncIterator[T], ...]:
         if k == 0:
             try:
                 async for value in iter(itr):
-                    await asyncio.gather(*[queue.put((None, value)) for queue in queues[1:]])
+                    await asyncio.gather(
+                        *[queue.put((None, value)) for queue in queues[1:]]
+                    )
                     yield value
             except Exception as e:
                 await asyncio.gather(*[queue.put((e, None)) for queue in queues[1:]])

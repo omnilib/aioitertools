@@ -695,6 +695,33 @@ class ItertoolsTest(TestCase):
                 await ait.next(it)
 
     @async_test
+    async def test_tee_propagate_exception(self):
+        class MyError(Exception):
+            pass
+
+        async def gen():
+            yield 1
+            yield 2
+            raise MyError
+
+        async def consumer(it):
+            result = 0
+            async for item in it:
+                result += item
+            return result
+
+        it1, it2 = ait.tee(gen())
+
+        values = await asyncio.gather(
+            consumer(it1),
+            consumer(it2),
+            return_exceptions=True,
+        )
+
+        for value in values:
+            self.assertIsInstance(value, MyError)
+
+    @async_test
     async def test_zip_longest_range(self):
         a = range(3)
         b = range(5)
