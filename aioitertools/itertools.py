@@ -239,7 +239,6 @@ async def filterfalse(
             yield item
 
 
-# pylint: disable=undefined-variable,multiple-statements
 @overload
 def groupby(itr: AnyIterable[T]) -> AsyncIterator[Tuple[T, List[T]]]:  # pragma: nocover
     pass
@@ -252,7 +251,6 @@ def groupby(
     pass
 
 
-# pylint: enable=undefined-variable,multiple-statements
 async def groupby(
     itr: AnyIterable[T], key: Optional[KeyFunction[T, R]] = None
 ) -> AsyncIterator[Tuple[Any, List[T]]]:
@@ -298,7 +296,6 @@ async def groupby(
     yield j, grouping
 
 
-# pylint: disable=undefined-variable,multiple-statements
 @overload
 def islice(
     itr: AnyIterable[T], __stop: Optional[int]
@@ -313,7 +310,6 @@ def islice(
     pass
 
 
-# pylint: enable=undefined-variable,multiple-statements
 async def islice(itr: AnyIterable[T], *args: Optional[int]) -> AsyncIterator[T]:
     """
     Yield selected items from the given iterable.
@@ -384,7 +380,7 @@ async def permutations(
 
 
 async def product(
-    *itrs: AnyIterable[T], repeat: int = 1  # pylint: disable=redefined-outer-name
+    *itrs: AnyIterable[T], repeat: int = 1
 ) -> AsyncIterator[Tuple[T, ...]]:
     """
     Yield cartesian products of all iterables.

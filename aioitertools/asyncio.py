@@ -57,7 +57,7 @@ async def as_completed(
         # asyncio.wait(): https://github.com/python/typeshed/blob/72ff7b94e534c610ddf8939bacbc55343e9465d2/stdlib/3/asyncio/tasks.pyi#L89  # noqa: E501
         done, pending = cast(
             Tuple[Set[Awaitable[T]], Set[Awaitable[T]]],
-            await asyncio.wait(  # pylint: disable=deprecated-argument
+            await asyncio.wait(
                 pending,
                 loop=loop,
                 timeout=remaining,
@@ -120,7 +120,7 @@ async def gather(
         # pending might be empty if the last items of args were dupes;
         # asyncio.wait([]) will raise an exception.
         if pending:
-            done, pending = await asyncio.wait(  # pylint: disable=deprecated-argument
+            done, pending = await asyncio.wait(
                 pending, loop=loop, return_when=asyncio.FIRST_COMPLETED
             )
             for x in done:

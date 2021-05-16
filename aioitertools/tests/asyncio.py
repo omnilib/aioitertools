@@ -59,7 +59,7 @@ class AsyncioTest(TestCase):
         fns = [fn(1), asyncio.ensure_future(fn(2))]
         if hasattr(asyncio, "create_task"):
             # 3.7 only
-            fns.append(asyncio.create_task(fn(3)))  # pylint: disable=no-member
+            fns.append(asyncio.create_task(fn(3)))
         else:
             fns.append(fn(3))
 

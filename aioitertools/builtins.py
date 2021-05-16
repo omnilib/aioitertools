@@ -29,7 +29,7 @@ from typing import (
     overload,
 )
 
-from . import asyncio as ait_asyncio  # pylint: disable=cyclic-import,reimported
+from . import asyncio as ait_asyncio
 from .helpers import Orderable, maybe_await
 from .types import (
     T1,
@@ -345,7 +345,6 @@ async def sum(itr: AnyIterable[T], start: T = None) -> T:
     return value
 
 
-# pylint: disable=undefined-variable,multiple-statements,too-many-arguments
 @overload
 def zip(__iter1: AnyIterable[T1]) -> AsyncIterator[Tuple[T1]]:  # pragma: no cover
     pass
@@ -399,7 +398,6 @@ def zip(
     pass
 
 
-# pylint: enable=undefined-variable,multiple-statements,too-many-arguments
 async def zip(*itrs: AnyIterable[Any]) -> AsyncIterator[Tuple[Any, ...]]:
     """
     Yield a tuple of items from mixed iterables until the shortest is consumed.

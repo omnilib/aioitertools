@@ -10,7 +10,7 @@ from .types import T
 if sys.version_info < (3, 8):
     from typing_extensions import Protocol
 else:
-    from typing import Protocol  # pylint: disable=no-name-in-module
+    from typing import Protocol
 
 
 class Orderable(Protocol):  # pragma: no cover

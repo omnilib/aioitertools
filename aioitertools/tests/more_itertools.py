@@ -15,7 +15,7 @@ async def _gen() -> AsyncIterable[int]:
 
 async def _empty() -> AsyncIterable[int]:
     return
-    yield 0  # pylint: disable=unreachable
+    yield 0
 
 
 class MoreItertoolsTest(TestCase):
