@@ -274,7 +274,7 @@ async def groupby(
 
     """
     if key is None:
-        key = lambda x: x
+        key = lambda x: x  # noqa: E731
 
     grouping: List[T] = []
 

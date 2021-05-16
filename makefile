@@ -22,7 +22,7 @@ format:
 	python -m black aioitertools
 
 lint:
-	python -m pylint --rcfile .pylint aioitertools
+	python -m flake8 aioitertools
 	python -m usort check aioitertools
 	python -m black --check aioitertools
 
