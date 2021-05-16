@@ -43,7 +43,7 @@ async def accumulate(
 
     Accepts both a standard function or a coroutine for accumulation.
 
-    Example:
+    Example::
 
         data = [1, 2, 3, 4]
 
@@ -73,7 +73,7 @@ class Chain:
 
         Consumes the first iterable lazily, in entirety, then the second, and so on.
 
-        Example:
+        Example::
 
             async for value in chain([1, 2, 3], [7, 8, 9]):
                 ...  # 1, 2, 3, 7, 8, 9
@@ -102,7 +102,7 @@ async def combinations(itr: AnyIterable[T], r: int) -> AsyncIterator[Tuple[T, ..
     Simple wrapper around itertools.combinations for asyncio.
     This will consume the entire iterable before yielding values.
 
-    Example:
+    Example::
 
         async for value in combinations(range(4), 3):
             ...  # (0, 1, 2), (0, 1, 3), (0, 2, 3), (1, 2, 3)
@@ -122,7 +122,7 @@ async def combinations_with_replacement(
     Simple wrapper around itertools.combinations_with_replacement.
     This will consume the entire iterable before yielding values.
 
-    Example:
+    Example::
 
         async for value in combinations_with_replacement("ABC", 2):
             ...  # ("A", "A"), ("A", "B"), ("A", "C"), ("B", "B"), ...
@@ -141,7 +141,7 @@ async def compress(
 
     Stops when either the iterable or the selectors have been exhausted.
 
-    Example:
+    Example::
 
         async for value in compress(range(5), [1, 0, 0, 1, 1]):
             ...  # 0, 3, 4
@@ -155,7 +155,7 @@ async def count(start: N = 0, step: N = 1) -> AsyncIterator[N]:
     """
     Yield an infinite series, starting at the given value and increasing by step.
 
-    Example:
+    Example::
 
         async for value in counter(10, -1):
             ...  # 10, 9, 8, 7, ...
@@ -175,7 +175,7 @@ async def cycle(itr: AnyIterable[T]) -> AsyncIterator[T]:
     Lazily consumes the iterable when the next value is needed, and caching
     the values in memory for future iterations of the series.
 
-    Example:
+    Example::
 
         async for value in cycle([1, 2]):
             ...  # 1, 2, 1, 2, 1, 2, ...
@@ -199,7 +199,7 @@ async def dropwhile(
 
     Accepts both standard functions and coroutines for the predicate.
 
-    Example:
+    Example::
 
         def pred(x):
             return x < 4
@@ -225,7 +225,7 @@ async def filterfalse(
 
     Accepts both standard functions and coroutines for the predicate.
 
-    Example:
+    Example::
 
         def pred(x):
             return x < 4
@@ -264,7 +264,7 @@ async def groupby(
     coroutines for the key function.  Suggest sorting by the key
     function before using groupby.
 
-    Example:
+    Example::
 
         data = ["A", "a", "b", "c", "C", "c"]
 
@@ -324,7 +324,7 @@ async def islice(itr: AnyIterable[T], *args: Optional[int]) -> AsyncIterator[T]:
     Starting from the start index (or zero), stopping at the stop
     index (or until exhausted), skipping items if step > 0.
 
-    Example:
+    Example::
 
         data = range(10)
 
@@ -372,7 +372,7 @@ async def permutations(
     Simple wrapper around itertools.combinations for asyncio.
     This will consume the entire iterable before yielding values.
 
-    Example:
+    Example::
 
         async for value in permutations(range(3)):
             ...  # (0, 1, 2), (0, 2, 1), (1, 0, 2), ...
@@ -392,7 +392,7 @@ async def product(
     Simple wrapper around itertools.combinations for asyncio.
     This will consume all iterables before yielding any values.
 
-    Example:
+    Example::
 
         async for value in product("abc", "xy"):
             ...  # ("a", "x"), ("a", "y"), ("b", "x"), ...
@@ -410,7 +410,7 @@ async def repeat(elem: T, n: int = -1) -> AsyncIterator[T]:
     """
     Yield the given value repeatedly, forever or up to n times.
 
-    Example:
+    Example::
 
         async for value in repeat(7):
             ...  # 7, 7, 7, 7, 7, 7, ...
@@ -432,7 +432,7 @@ async def starmap(
     Each iterable contained within will be unpacked and consumed before
     executing the function or coroutine.
 
-    Example:
+    Example::
 
         data = [(1, 1), (1, 1, 1), (2, 2)]
 
@@ -453,7 +453,7 @@ async def takewhile(
 
     Accepts both standard functions and coroutines for the predicate.
 
-    Example:
+    Example::
 
         def pred(x):
             return x < 4
@@ -483,7 +483,7 @@ def tee(itr: AnyIterable[T], n: int = 2) -> Tuple[AsyncIterator[T], ...]:
     used in keeping values in the queues until the other iterators finish
     consuming them.
 
-    Example:
+    Example::
 
         it1, it2 = tee(range(5), n=2)
 
@@ -533,7 +533,7 @@ async def zip_longest(
     If shorter iterables are exhausted, the default value will be used
     until all iterables are exhausted.
 
-    Example:
+    Example::
 
         a = range(3)
         b = range(5)

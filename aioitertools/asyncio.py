@@ -27,7 +27,7 @@ async def as_completed(
     Unlike `asyncio.as_completed`, this yields actual results, and does not require
     awaiting each item in the iterable.
 
-    Example:
+    Example::
 
         async for value in as_completed(futures):
             ...  # use value immediately
@@ -75,10 +75,17 @@ async def gather(
     return_exceptions: bool = False,
     limit: int = -1
 ) -> List[Any]:
-    """Like asyncio.gather but with a limit on concurrency.
+    """
+    Like asyncio.gather but with a limit on concurrency.
 
     Much of the complexity of gather comes with it support for cancel, which we
     omit here.  Note that all results are buffered.
+
+    Example::
+
+        futures = [some_coro(i) for i in range(10)]
+
+        results = await gather(*futures, limit=2)
     """
 
     # For detecting input duplicates and reconciling them at the end
@@ -138,8 +145,8 @@ async def gather_iter(
     return_exceptions: bool = False,
     limit: int = -1,
 ) -> List[T]:
-    """Wrapper around gather to handle gathering an iterable instead
-    of *args.
+    """
+    Wrapper around gather to handle gathering an iterable instead of *args.
 
     Note that the iterable values don't have to be awaitable.
     """

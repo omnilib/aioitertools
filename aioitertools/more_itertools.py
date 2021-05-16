@@ -17,7 +17,7 @@ async def take(n: int, iterable: AnyIterable[T]) -> List[T]:
     If there are too few items in iterable, all of them are returned.
     n needs to be at least 0. If it is 0, an empty list is returned.
 
-    Example:
+    Example::
 
         first_two = await take(2, [1, 2, 3, 4, 5])
 
@@ -34,7 +34,7 @@ async def chunked(iterable: AnyIterable[T], n: int) -> AsyncIterable[List[T]]:
     The last chunk will be shorter if the total number of items is not
     divisible by n.
 
-    Example:
+    Example::
 
         async for chunk in chunked([1, 2, 3, 4, 5], n=2):
             ...  # first iteration: chunk == [1, 2]; last one: chunk == [5]

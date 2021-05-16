@@ -56,7 +56,7 @@ async def all(itr: AnyIterable[MaybeAwaitable[Any]]) -> bool:
     The iterable will be fully consumed and any awaitables will
     automatically be awaited.
 
-    Example:
+    Example::
 
         if await all(it):
             ...
@@ -71,7 +71,7 @@ async def any(itr: AnyIterable[MaybeAwaitable[Any]]) -> bool:
     The iterable will be fully consumed and any awaitables will
     automatically be awaited.
 
-    Example:
+    Example::
 
         if await any(it):
             ...
@@ -89,9 +89,9 @@ def iter(itr: AnyIterable[T]) -> AsyncIterator[T]:
     Standard iterables will be wrapped in an async generator yielding
     each item in the iterable in the same order.
 
-    Examples:
+    Examples::
 
-        async for iter(range(10)):
+        async for value in iter(range(10)):
             ...
 
     """
@@ -127,7 +127,7 @@ async def next(
     Calls builtins.next() on standard iterators, and awaits itr.__anext__()
     on async iterators.
 
-    Example:
+    Example::
 
         value = await next(it)
 
@@ -150,7 +150,7 @@ async def list(itr: AnyIterable[T]) -> List[T]:
     """
     Consume a mixed iterable and return a list of items in order.
 
-    Example:
+    Example::
 
         await list(range(5))
         -> [0, 1, 2, 3, 4]
@@ -163,7 +163,7 @@ async def set(itr: AnyIterable[T]) -> Set[T]:
     """
     Consume a mixed iterable and return a set of items.
 
-    Example:
+    Example::
 
         await set([0, 1, 2, 3, 0, 1, 2, 3])
         -> {0, 1, 2, 3}
@@ -178,7 +178,7 @@ async def enumerate(
     """
     Consume a mixed iterable and yield the current index and item.
 
-    Example:
+    Example::
 
         async for index, value in enumerate(...):
             ...
@@ -194,7 +194,7 @@ async def map(fn: Callable[[T], R], itr: AnyIterable[T]) -> AsyncIterator[R]:
     """
     Modify item of a mixed iterable using the given function or coroutine.
 
-    Example:
+    Example::
 
         async for response in map(func, data):
             ...
@@ -223,7 +223,7 @@ async def max(itr: AnyIterable[Orderable], **kwargs: Any) -> Any:
     """
     Return the largest item in an iterable or the largest of two or more arguments.
 
-    Example:
+    Example::
 
         await min(range(5))
         -> 4
@@ -282,7 +282,7 @@ async def min(itr: AnyIterable[Orderable], **kwargs: Any) -> Any:
     """
     Return the smallest item in an iterable or the smallest of two or more arguments.
 
-    Example:
+    Example::
 
         await min(range(5))
         -> 0
@@ -327,7 +327,7 @@ async def sum(itr: AnyIterable[T], start: T = None) -> T:
     """
     Compute the sum of a mixed iterable, adding each value with the start value.
 
-    Example:
+    Example::
 
         await sum(generator())
         -> 1024
@@ -404,7 +404,7 @@ async def zip(*itrs: AnyIterable[Any]) -> AsyncIterator[Tuple[Any, ...]]:
     """
     Yield a tuple of items from mixed iterables until the shortest is consumed.
 
-    Example:
+    Example::
 
         async for a, b, c in zip(i, j, k):
             ...
