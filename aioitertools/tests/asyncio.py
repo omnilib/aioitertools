@@ -74,8 +74,7 @@ class AsyncioTest(TestCase):
         async def fn(arg):
             nonlocal counter, max_counter
             counter += 1
-            if max_counter < counter:
-                max_counter = counter
+            max_counter = max(max_counter, counter)
             await asyncio.sleep(0.001)
             counter -= 1
             return arg
