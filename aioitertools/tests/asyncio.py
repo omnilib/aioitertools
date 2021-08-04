@@ -2,6 +2,7 @@
 # Licensed under the MIT license
 
 import asyncio
+from contextlib import suppress
 from unittest import TestCase
 
 import aioitertools as ait
@@ -126,3 +127,30 @@ class AsyncioTest(TestCase):
         )
         self.assertEqual(result[1], 0.001)
         self.assertIsInstance(result[0], MyException)
+
+    @async_test
+    async def test_gather_cancel(self):
+        cancelled = False
+        started = False
+
+        async def _fn():
+            nonlocal started, cancelled
+            try:
+                started = True
+                await asyncio.sleep(99999)  # might as well be forever
+            except asyncio.CancelledError:
+                nonlocal cancelled
+                cancelled = True
+                raise
+
+        async def _gather():
+            await aio.gather(_fn())
+
+        task = asyncio.create_task(_gather())
+        # to insure the gather actually runs
+        await asyncio.sleep(0)
+        task.cancel()
+        with suppress(asyncio.CancelledError):
+            await task
+        self.assertTrue(started)
+        self.assertTrue(cancelled)
