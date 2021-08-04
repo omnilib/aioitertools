@@ -2,7 +2,6 @@
 # Licensed under the MIT license
 
 import asyncio
-from contextlib import suppress
 from unittest import TestCase
 
 import aioitertools as ait
@@ -137,7 +136,7 @@ class AsyncioTest(TestCase):
             nonlocal started, cancelled
             try:
                 started = True
-                await asyncio.sleep(99999)  # might as well be forever
+                await asyncio.sleep(10)  # might as well be forever
             except asyncio.CancelledError:
                 nonlocal cancelled
                 cancelled = True
@@ -146,11 +145,15 @@ class AsyncioTest(TestCase):
         async def _gather():
             await aio.gather(_fn())
 
-        task = asyncio.create_task(_gather())
+        if hasattr(asyncio, "create_task"):
+            # 3.7+ only
+            task = asyncio.create_task(_gather())
+        else:
+            task = asyncio.ensure_future(_gather())
         # to insure the gather actually runs
         await asyncio.sleep(0)
         task.cancel()
-        with suppress(asyncio.CancelledError):
+        with self.assertRaises(asyncio.CancelledError):
             await task
         self.assertTrue(started)
         self.assertTrue(cancelled)
