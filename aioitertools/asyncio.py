@@ -78,8 +78,10 @@ async def gather(
     """
     Like asyncio.gather but with a limit on concurrency.
 
-    Much of the complexity of gather comes with it support for cancel, which we
-    omit here.  Note that all results are buffered.
+    Note that all results are buffered.
+
+    If gather is cancelled all tasks that were internally created and still pending
+    will be cancelled as well.
 
     Example::
 
@@ -120,14 +122,22 @@ async def gather(
         # pending might be empty if the last items of args were dupes;
         # asyncio.wait([]) will raise an exception.
         if pending:
-            done, pending = await asyncio.wait(
-                pending, loop=loop, return_when=asyncio.FIRST_COMPLETED
-            )
-            for x in done:
-                if return_exceptions and x.exception():
-                    ret[pos[x]] = x.exception()
-                else:
-                    ret[pos[x]] = x.result()
+            try:
+                done, pending = await asyncio.wait(
+                    pending, loop=loop, return_when=asyncio.FIRST_COMPLETED
+                )
+                for x in done:
+                    if return_exceptions and x.exception():
+                        ret[pos[x]] = x.exception()
+                    else:
+                        ret[pos[x]] = x.result()
+            except asyncio.CancelledError:
+                # Since we created these tasks we should cancel them
+                for x in pending:
+                    x.cancel()
+                # we insure that all tasks are cancelled before we raise
+                await asyncio.gather(*pending, loop=loop, return_exceptions=True)
+                raise
 
         if not pending and next_arg == len(args):
             break
