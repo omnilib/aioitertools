@@ -47,6 +47,9 @@ from .types import (
 
 
 class Sentinel(Enum):
+    """
+    :meta private:
+    """
     MISSING = object()
 
 
