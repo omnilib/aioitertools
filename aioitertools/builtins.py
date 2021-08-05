@@ -50,6 +50,7 @@ class Sentinel(Enum):
     """
     :meta private:
     """
+
     MISSING = object()
 
 
