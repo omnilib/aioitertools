@@ -17,7 +17,7 @@ Feature release:
 $ git shortlog -s v0.7.1...v0.8.0
      1	Bryan Forbes
      2	Jason Fried
-    13	John Reese
+    15	John Reese
      1	Kevin Stone
      3	Roger Aiudi
      3	Sunyeop Lee
