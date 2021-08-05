@@ -1,6 +1,31 @@
 aioitertools
 ============
 
+v0.8.0
+------
+
+Feature release:
+
+- Added `builtins.any()` and `builtins.all()` (#44)
+- `builtins.next()` takes an optional `default` parameter (#40, #41)
+- `asyncio.gather()` now handles cancellation (#64)
+- Better exception handling in `itertools.tee()` (#47)
+- Removed dependency on typing_extensions for Python 3.8 and newer (#49)
+- Improved documentation and formatting
+
+```
+$ git shortlog -s v0.7.1...v0.8.0
+     1	Bryan Forbes
+     2	Jason Fried
+    13	John Reese
+     1	Kevin Stone
+     3	Roger Aiudi
+     3	Sunyeop Lee
+     1	Yop
+    10	pyup.io bot
+```
+
+
 v0.7.1
 ------
 
@@ -176,7 +201,7 @@ Initial feature release:
 - Unit tests for all builtins
 
 ```
-$ git shortlog -s ce32bdb1777f84e8f64b9470d81b84b754389dd9...v0.1.0
-     1	John Reese
+$ git shortlog -s v0.1.0
+     2	John Reese
 ```
 
