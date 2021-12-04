@@ -5,6 +5,6 @@ coverage[toml]==6.1.2
 flake8==4.0.1
 flit==3.5.0
 mypy==0.910
-sphinx==4.3.0
+sphinx==4.3.1
 usort==0.6.4
 git+https://github.com/miyakogi/m2r@66f4a5a500cdd9fc59085106bff082c9cadafaf3
