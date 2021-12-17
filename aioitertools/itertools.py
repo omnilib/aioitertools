@@ -17,7 +17,7 @@ import asyncio
 import builtins
 import itertools
 import operator
-from typing import Any, AsyncIterator, List, Optional, Tuple, overload
+from typing import Any, AsyncIterator, List, Optional, overload, Tuple
 
 from .builtins import enumerate, iter, list, next, zip
 from .helpers import maybe_await

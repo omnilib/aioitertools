@@ -6,5 +6,5 @@ flake8==4.0.1
 flit==3.5.1
 mypy==0.910
 sphinx==4.3.1
-usort==0.6.4
+usort==1.0.0rc1
 sphinx-mdinclude==0.4.0b1

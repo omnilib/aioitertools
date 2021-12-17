@@ -9,10 +9,10 @@ Provisional library.  Must be imported as `aioitertools.asyncio`.
 
 import asyncio
 import time
-from typing import Any, Awaitable, Dict, Iterable, List, Optional, Set, Tuple, cast
+from typing import Any, Awaitable, cast, Dict, Iterable, List, Optional, Set, Tuple
 
-from .builtins import maybe_await, iter as aiter
-from .types import AsyncIterator, MaybeAwaitable, AnyIterable, T
+from .builtins import iter as aiter, maybe_await
+from .types import AnyIterable, AsyncIterator, MaybeAwaitable, T
 
 
 async def as_completed(

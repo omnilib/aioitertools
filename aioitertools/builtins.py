@@ -19,30 +19,30 @@ from typing import (
     AsyncIterable,
     AsyncIterator,
     Callable,
+    cast,
     Iterable,
     List,
     Optional,
+    overload,
     Set,
     Tuple,
     Union,
-    cast,
-    overload,
 )
 
 from . import asyncio as ait_asyncio
-from .helpers import Orderable, maybe_await
+from .helpers import maybe_await, Orderable
 from .types import (
+    AnyIterable,
+    AnyIterator,
+    AnyStop,
+    MaybeAwaitable,
+    R,
+    T,
     T1,
     T2,
     T3,
     T4,
     T5,
-    AnyIterable,
-    AnyIterator,
-    AnyStop,
-    R,
-    T,
-    MaybeAwaitable,
 )
 
 
