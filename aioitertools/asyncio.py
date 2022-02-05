@@ -12,9 +12,11 @@ import time
 from typing import Any, Awaitable, cast, Dict, Iterable, List, Optional, Set, Tuple
 
 from .builtins import iter as aiter, maybe_await
+from .helpers import deprecated_wait_param
 from .types import AnyIterable, AsyncIterator, MaybeAwaitable, T
 
 
+@deprecated_wait_param
 async def as_completed(
     aws: Iterable[Awaitable[T]],
     *,
@@ -59,7 +61,6 @@ async def as_completed(
             Tuple[Set[Awaitable[T]], Set[Awaitable[T]]],
             await asyncio.wait(
                 pending,
-                loop=loop,
                 timeout=remaining,
                 return_when=asyncio.FIRST_COMPLETED,
             ),
@@ -69,6 +70,7 @@ async def as_completed(
             yield await item
 
 
+@deprecated_wait_param
 async def gather(
     *args: Awaitable[T],
     loop: Optional[asyncio.AbstractEventLoop] = None,
@@ -124,7 +126,7 @@ async def gather(
         if pending:
             try:
                 done, pending = await asyncio.wait(
-                    pending, loop=loop, return_when=asyncio.FIRST_COMPLETED
+                    pending, return_when=asyncio.FIRST_COMPLETED
                 )
                 for x in done:
                     if return_exceptions and x.exception():
@@ -136,7 +138,7 @@ async def gather(
                 for x in pending:
                     x.cancel()
                 # we insure that all tasks are cancelled before we raise
-                await asyncio.gather(*pending, loop=loop, return_exceptions=True)
+                await asyncio.gather(*pending, return_exceptions=True)
                 raise
 
         if not pending and next_arg == len(args):
@@ -149,6 +151,7 @@ async def gather(
     return ret
 
 
+@deprecated_wait_param
 async def gather_iter(
     itr: AnyIterable[MaybeAwaitable[T]],
     loop: Optional[asyncio.AbstractEventLoop] = None,
@@ -162,7 +165,6 @@ async def gather_iter(
     """
     return await gather(
         *[maybe_await(i) async for i in aiter(itr)],
-        loop=loop,
         return_exceptions=return_exceptions,
         limit=limit,
     )
