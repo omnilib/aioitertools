@@ -357,3 +357,12 @@ class BuiltinsTest(TestCase):
             self.assertEqual(a, slist[idx])
             self.assertEqual(b, srange[idx])
             idx += 1
+
+    @async_test
+    async def test_zip_shortest(self):
+        short = ["a", "b", "c"]
+        long = [0, 1, 2, 3, 5]
+
+        result = await ait.list(ait.zip(short, long))
+        expected = [["a", 0], ["b", 1], ["c", 2]]
+        self.assertListEqual(expected, result)

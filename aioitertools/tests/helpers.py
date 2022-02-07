@@ -10,8 +10,13 @@ from aioitertools.helpers import deprecated_wait_param, maybe_await
 
 def async_test(fn):
     def wrapped(*args, **kwargs):
-        loop = asyncio.get_event_loop()
-        return loop.run_until_complete(fn(*args, **kwargs))
+        try:
+            loop = asyncio.new_event_loop()
+            loop.set_debug(False)
+            result = loop.run_until_complete(fn(*args, **kwargs))
+            return result
+        finally:
+            loop.close()
 
     return wrapped
 
