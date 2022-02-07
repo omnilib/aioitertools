@@ -29,6 +29,9 @@ async def as_completed(
     Unlike `asyncio.as_completed`, this yields actual results, and does not require
     awaiting each item in the iterable.
 
+    Cancels all remaining awaitables if a timeout is given and the timeout threshold
+    is reached.
+
     Example::
 
         async for value in as_completed(futures):
