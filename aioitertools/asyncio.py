@@ -48,6 +48,9 @@ async def as_completed(
         if timeout:
             remaining = threshold - time.time()
             if remaining <= 0:
+                for fut in pending:
+                    if isinstance(fut, asyncio.Future):
+                        fut.cancel()
                 raise asyncio.TimeoutError()
 
         # asyncio.Future inherits from typing.Awaitable
