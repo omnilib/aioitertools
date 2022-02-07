@@ -415,8 +415,9 @@ async def zip(*itrs: AnyIterable[Any]) -> AsyncIterator[Tuple[Any, ...]]:
     its: List[AsyncIterator[Any]] = [iter(itr) for itr in itrs]
 
     while True:
-        try:
-            values = await asyncio.gather(*[it.__anext__() for it in its])
-            yield values
-        except AnyStop:
+        values = await asyncio.gather(
+            *[it.__anext__() for it in its], return_exceptions=True
+        )
+        if builtins.any(isinstance(v, AnyStop) for v in values):
             break
+        yield values
