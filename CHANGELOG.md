@@ -1,6 +1,28 @@
 aioitertools
 ============
 
+v0.9.0
+------
+
+Feature release
+
+- Python 3.10 support (#84, #97)
+- Fixed: `as_completed()` will now cancel pending tasks when the timeout
+  threshold has been reached.
+- Fixed: `zip()` will now gather all tasks correctly when exceptions are
+  raised, resulting in no pending tasks being unawaited.
+- DEPRECATED: `loop` parameters to asyncio functions are ignored, and will
+  be removed entirely in v0.11.0. This is for 3.10 compatibility, as well
+  as to follow common practice and guidance around asyncio.
+
+```
+$ git shortlog -s v0.8.0...v0.9.0
+    17	John Reese
+    20	dependabot[bot]
+     3	pyup.io bot
+```
+
+
 v0.8.0
 ------
 
