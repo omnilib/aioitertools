@@ -35,7 +35,7 @@ html: .venv README.md docs/*
 	source .venv/bin/activate && sphinx-build -b html docs html
 
 clean:
-	rm -rf build dist html README MANIFEST *.egg-info
+	rm -rf .mypy_cache build dist html README MANIFEST *.egg-info
 
 distclean: clean
 	rm -rf .venv

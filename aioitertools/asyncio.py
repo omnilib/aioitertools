@@ -51,6 +51,8 @@ async def as_completed(
                 for fut in pending:
                     if isinstance(fut, asyncio.Future):
                         fut.cancel()
+                    else:  # pragma: no cover
+                        pass
                 raise asyncio.TimeoutError()
 
         # asyncio.Future inherits from typing.Awaitable

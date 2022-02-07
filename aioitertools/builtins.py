@@ -113,12 +113,12 @@ def iter(itr: AnyIterable[T]) -> AsyncIterator[T]:
 
 
 @overload
-async def next(itr: AnyIterator[T]) -> T:
+async def next(itr: AnyIterator[T]) -> T:  # pragma: no cover
     ...
 
 
 @overload
-async def next(itr: AnyIterator[T1], default: T2) -> Union[T1, T2]:
+async def next(itr: AnyIterator[T1], default: T2) -> Union[T1, T2]:  # pragma: no cover
     ...
 
 

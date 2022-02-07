@@ -4,7 +4,6 @@ aioitertools
 Implementation of itertools, builtins, and more for AsyncIO and mixed-type iterables.
 
 [![build status](https://github.com/omnilib/aioitertools/workflows/Build/badge.svg)](https://github.com/omnilib/aioitertools/actions)
-[![code coverage](https://img.shields.io/codecov/c/gh/omnilib/aioitertools)](https://codecov.io/gh/omnilib/aioitertools)
 [![version](https://img.shields.io/pypi/v/aioitertools.svg)](https://pypi.org/project/aioitertools)
 [![license](https://img.shields.io/pypi/l/aioitertools.svg)](https://github.com/omnilib/aioitertools/blob/master/LICENSE)
 [![code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)

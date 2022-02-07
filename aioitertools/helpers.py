@@ -9,9 +9,9 @@ from typing import Awaitable, Callable, Union
 
 from .types import P, R, T
 
-if sys.version_info < (3, 8):
+if sys.version_info < (3, 8):  # pragma: no cover
     from typing_extensions import Protocol
-else:
+else:  # pragma: no cover
     from typing import Protocol
 
 
