@@ -51,6 +51,106 @@ class AsyncioTest(TestCase):
         self.assertEqual(results, 1)
 
     @async_test
+    async def test_as_generated(self):
+        async def gen():
+            for i in range(10):
+                yield i
+                await asyncio.sleep(0)
+
+        gens = [gen(), gen(), gen()]
+        expected = list(range(10)) * 3
+        results = []
+        async for value in aio.as_generated(gens):
+            results.append(value)
+        self.assertEqual(30, len(results))
+        self.assertListEqual(sorted(expected), sorted(results))
+
+    @async_test
+    async def test_as_generated_exception(self):
+        async def gen1():
+            for i in range(3):
+                yield i
+                await asyncio.sleep(0)
+            raise Exception("fake")
+
+        async def gen2():
+            for i in range(10):
+                yield i
+                await asyncio.sleep(0)
+
+        gens = [gen1(), gen2()]
+        results = []
+        with self.assertRaisesRegex(Exception, "fake"):
+            async for value in aio.as_generated(gens):
+                results.append(value)
+        self.assertNotIn(10, results)
+
+    @async_test
+    async def test_as_generated_return_exception(self):
+        async def gen1():
+            for i in range(3):
+                yield i
+                await asyncio.sleep(0)
+            raise Exception("fake")
+
+        async def gen2():
+            for i in range(10):
+                yield i
+                await asyncio.sleep(0)
+
+        gens = [gen1(), gen2()]
+        expected = list(range(3)) + list(range(10))
+        errors = []
+        results = []
+        async for value in aio.as_generated(gens, return_exceptions=True):
+            if isinstance(value, Exception):
+                errors.append(value)
+            else:
+                results.append(value)
+        self.assertListEqual(sorted(expected), sorted(results))
+        self.assertEqual(1, len(errors))
+        self.assertIsInstance(errors[0], Exception)
+
+    @async_test
+    async def test_as_generated_task_cancelled(self):
+        async def gen(max: int = 10):
+            for i in range(5):
+                if i > max:
+                    raise asyncio.CancelledError
+                yield i
+                await asyncio.sleep(0)
+
+        gens = [gen(2), gen()]
+        expected = list(range(3)) + list(range(5))
+        results = []
+        async for value in aio.as_generated(gens):
+            results.append(value)
+        self.assertListEqual(sorted(expected), sorted(results))
+
+    @async_test
+    async def test_as_generated_cancelled(self):
+        async def gen():
+            for i in range(5):
+                yield i
+                await asyncio.sleep(0.1)
+
+        expected = [0, 0, 1, 1]
+        results = []
+
+        async def foo():
+            gens = [gen(), gen()]
+            async for value in aio.as_generated(gens):
+                results.append(value)
+            return results
+
+        task = asyncio.ensure_future(foo())
+        await asyncio.sleep(0.15)
+        task.cancel()
+        await task
+
+        self.assertListEqual(sorted(expected), sorted(results))
+
+    @async_test
     async def test_gather_input_types(self):
         async def fn(arg):
             await asyncio.sleep(0.001)
