@@ -1,6 +1,19 @@
 aioitertools
 ============
 
+v0.10.0
+-------
+
+Feature release
+
+- New `as_generated()` function for consuming multiple iterables (#99)
+
+```
+$ git shortlog -s v0.10.0b1...v0.10.0
+     1	John Reese
+```
+
+
 v0.10.0b1
 ---------
 
