@@ -142,6 +142,11 @@ async def as_generated(
                 await queue.put({"done": True})
 
     tasks = [asyncio.ensure_future(tailer(iter)) for iter in iterables]
+
+    if not tasks:
+        # Nothing to do
+        return
+
     tailer_count = len(tasks)
 
     try:
