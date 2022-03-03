@@ -119,42 +119,44 @@ async def as_generated(
             ...  # intermixed values yielded from gen1 and gen2
     """
 
-    exc_queue: asyncio.Queue[Exception] = asyncio.Queue()
-    queue: asyncio.Queue[T] = asyncio.Queue()
+    queue: asyncio.Queue[dict] = asyncio.Queue()
+
+    tailer_count: int = 0
 
     async def tailer(iter: AsyncIterable[T]) -> None:
+        nonlocal tailer_count
+
         try:
             async for item in iter:
-                await queue.put(item)
+                await queue.put({"value": item})
         except asyncio.CancelledError:
             if isinstance(iter, AsyncGenerator):  # pragma:nocover
                 await iter.aclose()
             raise
         except Exception as e:
-            await exc_queue.put(e)
+            await queue.put({"exception": e})
+        finally:
+            tailer_count -= 1
+
+            if tailer_count == 0:
+                await queue.put({"done": True})
 
     tasks = [asyncio.ensure_future(tailer(iter)) for iter in iterables]
-    pending = set(tasks)
+    tailer_count = len(tasks)
 
     try:
-        while pending:
-            try:
-                exc = exc_queue.get_nowait()
-                if return_exceptions:
-                    yield exc  # type: ignore
-                else:
-                    raise exc
-            except asyncio.QueueEmpty:
-                pass
+        while True:
+            i = await queue.get()
 
-            try:
-                value = queue.get_nowait()
-                yield value
-            except asyncio.QueueEmpty:
-                for task in list(pending):
-                    if task.done():
-                        pending.remove(task)
-                await asyncio.sleep(0.001)
+            if "value" in i:
+                yield i["value"]
+            elif "exception" in i:
+                if return_exceptions:
+                    yield i["exception"]
+                else:
+                    raise i["exception"]
+            elif "done" in i:
+                break
 
     except (asyncio.CancelledError, GeneratorExit):
         pass
