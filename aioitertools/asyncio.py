@@ -8,6 +8,7 @@ Provisional library.  Must be imported as `aioitertools.asyncio`.
 """
 
 import asyncio
+from contextlib import suppress
 import time
 from typing import (
     Any,
@@ -123,18 +124,19 @@ async def as_generated(
 
     tailer_count: int = 0
 
-    async def tailer(iter: AsyncIterable[T]) -> None:
+    async def tailer(iterable: AsyncIterable[T]) -> None:
         nonlocal tailer_count
 
         try:
-            async for item in iter:
+            async for item in iterable:
                 await queue.put({"value": item})
         except asyncio.CancelledError:
-            if isinstance(iter, AsyncGenerator):  # pragma:nocover
-                await iter.aclose()
+            if isinstance(iterable, AsyncGenerator):  # pragma:nocover
+                with suppress(Exception):
+                    await iterable.aclose()
             raise
-        except Exception as e:
-            await queue.put({"exception": e})
+        except Exception as exc:
+            await queue.put({"exception": exc})
         finally:
             tailer_count -= 1
 
@@ -162,20 +164,16 @@ async def as_generated(
                     raise i["exception"]
             elif "done" in i:
                 break
-
     except (asyncio.CancelledError, GeneratorExit):
         pass
-
     finally:
         for task in tasks:
             if not task.done():
                 task.cancel()
 
         for task in tasks:
-            try:
+            with suppress(asyncio.CancelledError):
                 await task
-            except asyncio.CancelledError:
-                pass
 
 
 @deprecated_wait_param
