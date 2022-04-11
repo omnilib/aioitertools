@@ -229,7 +229,7 @@ async def max(itr: AnyIterable[Orderable], **kwargs: Any) -> Any:
 
     Example::
 
-        await min(range(5))
+        await max(range(5))
         -> 4
 
     """
