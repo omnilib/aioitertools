@@ -56,3 +56,41 @@ class MoreItertoolsTest(TestCase):
     @async_test
     async def test_chunked_empty(self) -> None:
         self.assertEqual([], [chunk async for chunk in mit.chunked(_empty(), 2)])
+
+    @async_test
+    async def test_before_and_after_split(self) -> None:
+        it = _gen()
+        before, after = await mit.before_and_after(lambda i: i <= 2, it)
+        self.assertEqual([elm async for elm in before], [0, 1, 2])
+        self.assertEqual([elm async for elm in after], [3, 4])
+
+    @async_test
+    async def test_before_and_after_before_only(self) -> None:
+        it = _gen()
+        before, after = await mit.before_and_after(lambda i: True, it)
+        self.assertEqual([elm async for elm in before], [0, 1, 2, 3, 4])
+        self.assertEqual([elm async for elm in after], [])
+
+    @async_test
+    async def test_before_and_after_after_only(self) -> None:
+        it = _gen()
+        before, after = await mit.before_and_after(lambda i: False, it)
+        self.assertEqual([elm async for elm in before], [])
+        self.assertEqual([elm async for elm in after], [0, 1, 2, 3, 4])
+
+    @async_test
+    async def test_before_and_after_async_predicate(self) -> None:
+        async def predicate(elm: int) -> bool:
+            return elm <= 2
+
+        it = _gen()
+        before, after = await mit.before_and_after(predicate, it)
+        self.assertEqual([elm async for elm in before], [0, 1, 2])
+        self.assertEqual([elm async for elm in after], [3, 4])
+
+    @async_test
+    async def test_before_and_after_empty(self) -> None:
+        it = _empty()
+        before, after = await mit.before_and_after(lambda i: True, it)
+        self.assertEqual([elm async for elm in before], [])
+        self.assertEqual([elm async for elm in after], [])
