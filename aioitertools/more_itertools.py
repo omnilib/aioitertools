@@ -70,7 +70,7 @@ async def before_and_after(
 
     it = iter(iterable)
 
-    transition = asyncio.get_running_loop().create_future()
+    transition = asyncio.get_event_loop().create_future()
 
     async def true_iterator():
         async for elem in it:
