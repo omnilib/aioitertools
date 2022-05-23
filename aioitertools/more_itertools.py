@@ -1,11 +1,15 @@
 # Copyright 2020 John Reese
 # Licensed under the MIT license
 
-from typing import AsyncIterable, List, TypeVar
+import asyncio
+from typing import AsyncIterable, List, Tuple, TypeVar
+
+from aioitertools.helpers import maybe_await
 
 from .builtins import iter
 from .itertools import islice
-from .types import AnyIterable
+from .types import AnyIterable, Predicate
+
 
 T = TypeVar("T")
 
@@ -44,3 +48,47 @@ async def chunked(iterable: AnyIterable[T], n: int) -> AsyncIterable[List[T]]:
     while chunk != []:
         yield chunk
         chunk = await take(n, it)
+
+
+async def before_and_after(
+    predicate: Predicate[T], iterable: AnyIterable[T]
+) -> Tuple[AsyncIterable[T], AsyncIterable[T]]:
+    """
+    A variant of :func:`aioitertools.takewhile` that allows complete access to the
+    remainder of the iterator.
+
+         >>> it = iter('ABCdEfGhI')
+         >>> all_upper, remainder = await before_and_after(str.isupper, it)
+         >>> ''.join([char async for char in all_upper])
+         'ABC'
+         >>> ''.join([char async for char in remainder])
+         'dEfGhI'
+
+    Note that the first iterator must be fully consumed before the second
+    iterator can generate valid results.
+    """
+
+    it = iter(iterable)
+
+    transition = asyncio.get_event_loop().create_future()
+
+    async def true_iterator():
+        async for elem in it:
+            if await maybe_await(predicate(elem)):
+                yield elem
+            else:
+                transition.set_result(elem)
+                return
+
+        transition.set_exception(StopAsyncIteration)
+
+    async def remainder_iterator():
+        try:
+            yield (await transition)
+        except StopAsyncIteration:
+            return
+
+        async for elm in it:
+            yield elm
+
+    return true_iterator(), remainder_iterator()
