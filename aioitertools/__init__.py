@@ -1,11 +1,11 @@
-# Copyright 2018 John Reese
+# Copyright 2022 Amethyst Reese
 # Licensed under the MIT license
 
 """
 itertools and builtins for AsyncIO and mixed iterables
 """
 
-__author__ = "John Reese"
+__author__ = "Amethyst Reese"
 from . import asyncio
 from .__version__ import __version__
 from .builtins import (
