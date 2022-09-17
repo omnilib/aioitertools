@@ -51,7 +51,7 @@ async def as_completed(
 
     """
     done: Set[Awaitable[T]] = set()
-    pending: Set[Awaitable[T]] = set(aws)
+    pending: Set[Awaitable[T]] = {asyncio.ensure_future(a) for a in aws}
     remaining: Optional[float] = None
 
     if timeout and timeout > 0:

@@ -3,7 +3,8 @@
 
 import asyncio
 import functools
-from unittest import TestCase
+import sys
+from unittest import skipIf, TestCase
 
 from aioitertools.helpers import deprecated_wait_param, maybe_await
 
@@ -37,6 +38,7 @@ class HelpersTest(TestCase):
 
         self.assertEqual(await maybe_await(forty_two()), 42)
 
+    @skipIf(sys.version_info >= (3, 11), "@asyncio.coroutine removed")
     @async_test
     async def test_maybe_await_coroutine(self):
         @asyncio.coroutine
