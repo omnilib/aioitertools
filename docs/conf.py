@@ -11,7 +11,6 @@ import pathlib
 import sys
 
 root = pathlib.Path(__file__).parent.parent
-print(f"root = {repr(root)}")
 sys.path.insert(0, root.as_posix())
 
 project = "aioitertools"
