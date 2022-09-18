@@ -24,15 +24,12 @@ from typing import (
 )
 
 from .builtins import iter as aiter, maybe_await
-from .helpers import deprecated_wait_param
 from .types import AnyIterable, AsyncIterator, MaybeAwaitable, T
 
 
-@deprecated_wait_param
 async def as_completed(
     aws: Iterable[Awaitable[T]],
     *,
-    loop: Optional[asyncio.AbstractEventLoop] = None,
     timeout: Optional[float] = None,
 ) -> AsyncIterator[T]:
     """
@@ -171,10 +168,8 @@ async def as_generated(
                 pass
 
 
-@deprecated_wait_param
 async def gather(
     *args: Awaitable[T],
-    loop: Optional[asyncio.AbstractEventLoop] = None,
     return_exceptions: bool = False,
     limit: int = -1,
 ) -> List[Any]:
@@ -252,10 +247,8 @@ async def gather(
     return ret
 
 
-@deprecated_wait_param
 async def gather_iter(
     itr: AnyIterable[MaybeAwaitable[T]],
-    loop: Optional[asyncio.AbstractEventLoop] = None,
     return_exceptions: bool = False,
     limit: int = -1,
 ) -> List[T]:
