@@ -6,7 +6,7 @@ import functools
 import sys
 from unittest import skipIf, TestCase
 
-from aioitertools.helpers import deprecated_wait_param, maybe_await
+from aioitertools.helpers import maybe_await
 
 
 def async_test(fn):
@@ -55,27 +55,3 @@ class HelpersTest(TestCase):
             return a * b
 
         self.assertEqual(await maybe_await(functools.partial(multiply, 6)(7)), 42)
-
-    @async_test
-    async def test_deprecated_wait(self):
-        @deprecated_wait_param
-        async def foo(a, *, loop=None, frob=False):
-            if frob:
-                return a * a
-            else:
-                return a
-
-        self.assertEqual(4, await foo(4))
-        self.assertEqual(16, await foo(4, frob=True))
-
-        with self.assertWarnsRegex(
-            DeprecationWarning, r"foo\(\) parameter `loop` is deprecated"
-        ):
-            result = await foo(9, loop=object(), frob=True)
-            self.assertEqual(81, result)
-
-        with self.assertWarnsRegex(
-            DeprecationWarning, r"foo\(\) parameter `loop` is deprecated"
-        ):
-            result = await foo(5, loop=None)
-            self.assertEqual(5, result)
