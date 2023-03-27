@@ -163,6 +163,20 @@ async def list(itr: AnyIterable[T]) -> List[T]:
     return [item async for item in iter(itr)]
 
 
+async def tuple(itr: AnyIterable[T]) -> Tuple[T, ...]:
+    """
+    Consume a mixed iterable and return a tuple of items in order.
+
+    Example::
+
+        await tuple(range(5))
+        -> (0, 1, 2, 3, 4)
+
+    """
+    # Suboptimal, but tuple can't be created from AsyncIterable directly.
+    return builtins.tuple(await list(itr))
+
+
 async def set(itr: AnyIterable[T]) -> Set[T]:
     """
     Consume a mixed iterable and return a set of items.

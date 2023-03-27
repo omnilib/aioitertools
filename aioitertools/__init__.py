@@ -20,6 +20,7 @@ from .builtins import (
     next,
     set,
     sum,
+    tuple,
     zip,
 )
 from .itertools import (
