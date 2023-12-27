@@ -20,7 +20,7 @@ Feature release
 $ git shortlog -s v0.10.0...v0.11.0
     10	Amethyst Reese
      2	Daniel Miranda
-     6	John Reese
+     6	Amethyst Reese
      1	Minsung.Kim
     12	dependabot[bot]
 ```
@@ -35,7 +35,7 @@ Feature release
 
 ```text
 $ git shortlog -s v0.10.0b1...v0.10.0
-     1	John Reese
+     1	Amethyst Reese
 ```
 
 
@@ -48,7 +48,7 @@ Beta release
 
 ```text
 $ git shortlog -s v0.9.0...v0.10.0b1
-     3	John Reese
+     3	Amethyst Reese
 ```
 
 
@@ -68,7 +68,7 @@ Feature release
 
 ```text
 $ git shortlog -s v0.8.0...v0.9.0
-    17	John Reese
+    17	Amethyst Reese
     20	dependabot[bot]
      3	pyup.io bot
 ```
@@ -90,7 +90,7 @@ Feature release:
 $ git shortlog -s v0.7.1...v0.8.0
      1	Bryan Forbes
      2	Jason Fried
-    15	John Reese
+    15	Amethyst Reese
      1	Kevin Stone
      3	Roger Aiudi
      3	Sunyeop Lee
@@ -109,7 +109,7 @@ Bugfix release:
 
 ```text
 $ git shortlog -s v0.7.0...v0.7.1
-     8	John Reese
+     8	Amethyst Reese
      1	Roger Aiudi
      2	pyup-bot
 ```
@@ -124,7 +124,7 @@ Feature release
 
 ```text
 $ git shortlog -s v0.6.1...v0.7.0
-     7	John Reese
+     7	Amethyst Reese
 ```
 
 
@@ -139,7 +139,7 @@ Metadata fix
 ```text
 $ git shortlog -s v0.6.0...v0.6.1
      1	Dima Tisnek
-     6	John Reese
+     6	Amethyst Reese
 ```
 
 
@@ -152,7 +152,7 @@ Feature release v0.6.0
 
 ```text
 $ git shortlog -s v0.5.1...v0.6.0
-     3	John Reese
+     3	Amethyst Reese
      1	Zsolt Dollenstein
 ```
 
@@ -167,7 +167,7 @@ Documentation Release v0.5.1
 
 ```text
 $ git shortlog -s v0.5.0...v0.5.1
-     4	John Reese
+     4	Amethyst Reese
 ```
 
 
@@ -189,7 +189,7 @@ Feature Release v0.5.0
 ```text
 $ git shortlog -s v0.4.0...v0.5.0
      1	Alexey Simuskov
-    23	John Reese
+    23	Amethyst Reese
      1	Tim Hatch
 ```
 
@@ -204,7 +204,7 @@ Feature release v0.4.0
 
 ```text
 $ git shortlog -s v0.3.2...v0.4.0
-     4	John Reese
+     4	Amethyst Reese
 ```
 
 
@@ -218,7 +218,7 @@ Bug fix release:
 ```text
 $ git shortlog -s v0.3.1...v0.3.2
      1	A Connecticut Princess
-     2	John Reese
+     2	Amethyst Reese
 ```
 
 
@@ -231,7 +231,7 @@ Bug fix release v0.3.1:
 
 ```text
 $ git shortlog -s v0.3.0...v0.3.1
-     2	John Reese
+     2	Amethyst Reese
      3	Vladimir Solomatin
 ```
 
@@ -248,7 +248,7 @@ Feature release v0.3.0:
 ```text
 $ git shortlog -s v0.2.0...v0.3.0
      6	Bryan Forbes
-    12	John Reese
+    12	Amethyst Reese
 ```
 
 
@@ -261,7 +261,7 @@ Feature release:
 
 ```text
 $ git shortlog -s v0.1.0...v0.2.0
-     8	John Reese
+     8	Amethyst Reese
 ```
 
 
@@ -275,7 +275,7 @@ Initial feature release:
 
 ```text
 $ git shortlog -s v0.1.0
-     2	John Reese
+     2	Amethyst Reese
 ```
 
 [attribution-badge]:
