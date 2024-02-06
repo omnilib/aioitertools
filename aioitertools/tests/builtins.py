@@ -370,3 +370,20 @@ class BuiltinsTest(TestCase):
         result = await ait.list(ait.zip(short, long))
         expected = [("a", 0), ("b", 1), ("c", 2)]
         self.assertListEqual(expected, result)
+
+    @async_test
+    async def test_zip_exception(self):
+        async def raise_after(x: int):
+            for i in range(x):
+                yield i
+            assert False
+
+        short = raise_after(2)
+        long = ["a", "b", "c"]
+
+        gen = ait.zip(short, long)
+        self.assertEqual((0, "a"), await ait.next(gen))
+        self.assertEqual((1, "b"), await ait.next(gen))
+
+        with self.assertRaises(AssertionError):
+            await ait.next(gen)
