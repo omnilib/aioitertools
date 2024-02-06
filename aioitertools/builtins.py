@@ -434,4 +434,4 @@ async def zip(*itrs: AnyIterable[Any]) -> AsyncIterator[Tuple[Any, ...]]:
         )
         if builtins.any(isinstance(v, AnyStop) for v in values):
             break
-        yield tuple(values)
+        yield builtins.tuple(values)
