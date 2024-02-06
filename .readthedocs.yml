@@ -7,6 +7,7 @@ build:
     python: "3.10"
 python:
   install:
-    - requirements: requirements-dev.txt
     - method: pip
       path: .
+      extra_requirements:
+        - docs
