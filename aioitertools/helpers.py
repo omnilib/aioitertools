@@ -14,11 +14,9 @@ else:  # pragma: no cover
 
 
 class Orderable(Protocol):  # pragma: no cover
-    def __lt__(self, other):
-        ...
+    def __lt__(self, other): ...
 
-    def __gt__(self, other):
-        ...
+    def __gt__(self, other): ...
 
 
 async def maybe_await(object: Union[Awaitable[T], T]) -> T:
