@@ -1,15 +1,13 @@
 [build-system]
-requires = ["flit_core >=2,<4"]
+requires = ["flit_core >=3.8,<4"]
 build-backend = "flit_core.buildapi"
 
-[tool.flit.metadata]
-module = "aioitertools"
-author = "Amethyst Reese"
-author-email = "amy@noswap.com"
-description-file = "README.md"
-home-page = "https://aioitertools.omnilib.dev"
-requires = ["typing_extensions>=4.0; python_version < '3.10'"]
-requires-python = ">=3.6"
+[project]
+name = "aioitertools"
+readme = "README.md"
+authors = [{ name = "Amethyst Reese", email = "amethyst@n7.gg" }]
+license = { file = "LICENSE" }
+dynamic = ["version", "description"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Framework :: AsyncIO",
@@ -17,15 +15,31 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Topic :: Software Development :: Libraries",
 ]
+requires-python = ">=3.8"
+dependencies = ["typing_extensions>=4.0; python_version < '3.10'"]
 
-[tool.flit.metadata.urls]
-Documentation = "https://aioitertools.omnilib.dev/en/latest/"
+[project.optional-dependencies]
+dev = [
+    "attribution==1.6.2",
+    "black==24.1.0",
+    "coverage==7.4.0",
+    "flake8==7.0.0",
+    "flit==3.9.0",
+    "mypy==1.8.0",
+    "usort==1.0.7",
+    "ufmt==2.3.0",
+]
+docs = [
+    "sphinx==7.2.6",
+    "sphinx-mdinclude==0.5.3",
+]
+
+[project.urls]
+Documentation = "https://aioitertools.omnilib.dev"
 Github = "https://github.com/omnilib/aioitertools"
 
 [tool.flit.sdist]
-exclude = [
-    ".github/",
-]
+exclude = [".github/"]
 
 [tool.attribution]
 name = "aioitertools"
@@ -44,9 +58,6 @@ precision = 1
 show_missing = true
 skip_covered = true
 
-[tool.isort]
-line_length = 88
-multi_line_output = 3
-force_grid_wrap = false
-include_trailing_comma = true
-use_parentheses = true
+[tool.mypy]
+# strict = true
+ignore_missing_imports = true

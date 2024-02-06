@@ -1,35 +1,30 @@
-build:
-	flit build
-
-dev:
-	flit install --symlink
-
-setup:
-	python -m pip install -Ur requirements-dev.txt
+PKG:=aioitertools
+EXTRAS:=dev,docs
 
 .venv:
 	python -m venv .venv
-	source .venv/bin/activate && make setup dev
+	source .venv/bin/activate && make install
 	echo 'run `source .venv/bin/activate` to use virtualenv'
 
 venv: .venv
+
+install:
+	python -m pip install -Ue .[$(EXTRAS)]
 
 release: lint test clean
 	flit publish
 
 format:
-	python -m usort format aioitertools
-	python -m black aioitertools
+	python -m ufmt format $(PKG)
 
 lint:
-	python -m flake8 aioitertools
-	python -m usort check aioitertools
-	python -m black --check aioitertools
+	python -m flake8 $(PKG)
+	python -m ufmt check $(PKG)
 
 test:
-	python -m coverage run -m aioitertools.tests
+	python -m coverage run -m $(PKG).tests
 	python -m coverage report
-	python -m mypy aioitertools
+	python -m mypy -p $(PKG)
 
 html: .venv README.md docs/*
 	source .venv/bin/activate && sphinx-build -b html docs html

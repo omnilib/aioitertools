@@ -327,7 +327,7 @@ async def min(itr: AnyIterable[Orderable], **kwargs: Any) -> Any:
     return value
 
 
-async def sum(itr: AnyIterable[T], start: T = None) -> T:
+async def sum(itr: AnyIterable[T], start: Optional[T] = None) -> T:
     """
     Compute the sum of a mixed iterable, adding each value with the start value.
 
@@ -420,4 +420,4 @@ async def zip(*itrs: AnyIterable[Any]) -> AsyncIterator[Tuple[Any, ...]]:
         )
         if builtins.any(isinstance(v, AnyStop) for v in values):
             break
-        yield values
+        yield tuple(values)

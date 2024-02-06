@@ -364,5 +364,5 @@ class BuiltinsTest(TestCase):
         long = [0, 1, 2, 3, 5]
 
         result = await ait.list(ait.zip(short, long))
-        expected = [["a", 0], ["b", 1], ["c", 2]]
+        expected = [("a", 0), ("b", 1), ("c", 2)]
         self.assertListEqual(expected, result)
