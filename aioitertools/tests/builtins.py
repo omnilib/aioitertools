@@ -204,6 +204,10 @@ class BuiltinsTest(TestCase):
     async def test_list(self):
         self.assertEqual(await ait.list(ait.iter(slist)), slist)
 
+    @async_test
+    async def test_tuple(self):
+        self.assertEqual(await ait.tuple(ait.iter(slist)), tuple(slist))
+
     # aioitertools.set()
 
     @async_test
