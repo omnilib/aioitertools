@@ -1,18 +1,14 @@
 PKG:=aioitertools
 EXTRAS:=dev,docs
 
-.venv:
-	python -m venv .venv
-	source .venv/bin/activate && make install
-	echo 'run `source .venv/bin/activate` to use virtualenv'
-
-venv: .venv
+venv:
+	poetry shell
 
 install:
-	python -m pip install -Ue .[$(EXTRAS)]
+	poetry install --with $(EXTRAS)
 
 release: lint test clean
-	flit publish
+	poetry publish
 
 format:
 	python -m ufmt format $(PKG)
@@ -26,8 +22,8 @@ test:
 	python -m coverage report
 	python -m mypy -p $(PKG)
 
-html: .venv README.md docs/*
-	source .venv/bin/activate && sphinx-build -b html docs html
+html: venv README.md docs/*
+	sphinx-build -b html docs html
 
 clean:
 	rm -rf .mypy_cache build dist html README MANIFEST *.egg-info
