@@ -2,22 +2,24 @@
 
 ## Preparation
 
-You'll need to have Python 3.6 available for testing.
-I recommend using [pyenv][] for this:
+You'll need to have Python 3.8 available for testing.
+I recommend using [pyenv](https://github.com/pyenv/pyenv) for this:
 
-    $ pyenv install 3.6.5
-    $ pyenv shell 3.6.5
-
+```shell
+pyenv install 3.8
+pyenv shell 3.8
+```
 
 ## Setup
 
 Create a fresh development enviroment, and install the
 appropriate tools and dependencies:
 
-    $ cd <path/to/aioitertools>
-    $ make venv
-    $ source .venv/bin/activate
-
+```shell
+cd <path/to/aioitertools>
+make venv
+source .venv/bin/activate
+```
 
 ## Submitting
 
@@ -29,5 +31,3 @@ that you have done the following:
 * Written or modified tests for new functionality
 * Used `make format` to format code appropriately
 * Validated and tested code with `make lint test`
-
-[pyenv]: https://github.com/pyenv/pyenv

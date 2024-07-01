@@ -1,5 +1,4 @@
-aioitertools
-============
+# aioitertools
 
 Implementation of itertools, builtins, and more for AsyncIO and mixed-type iterables.
 
@@ -8,18 +7,12 @@ Implementation of itertools, builtins, and more for AsyncIO and mixed-type itera
 [![changelog](https://img.shields.io/badge/change-log-blue)](https://aioitertools.omnilib.dev/en/latest/changelog.html)
 [![license](https://img.shields.io/pypi/l/aioitertools.svg)](https://github.com/omnilib/aioitertools/blob/master/LICENSE)
 
+## Install
 
-Install
--------
+The `aioitertools` package requires Python 3.8 or newer.
+You can install it from PyPI: `pip install aioitertools`.
 
-aioitertools requires Python 3.6 or newer.
-You can install it from PyPI:
-
-    $ pip install aioitertools
-
-
-Usage
------
+## Usage
 
 aioitertools shadows the standard library whenever possible to provide
 asynchronous version of the modules and functions you already know.  It's
@@ -48,7 +41,6 @@ async for a, b in zip(something, something_else):
     ...
 ```
 
-
 aioitertools emulates the entire `itertools` module, offering the same
 function signatures, but as async generators.  All functions support
 standard iterables and async iterables alike, and can take functions or
@@ -70,19 +62,15 @@ async for value in islice(generator1(), 2, None, 2):
     ...
 ```
 
-
 See [builtins.py][], [itertools.py][], and [more_itertools.py][] for full
 documentation of functions and abilities.
 
-
-License
--------
+## License
 
 aioitertools is copyright [Amethyst Reese](https://noswap.com), and licensed under
 the MIT license.  I am providing code in this repository to you under an open
 source license.  This is my personal repository; the license you receive to
 my code is from me and not from my employer. See the `LICENSE` file for details.
-
 
 [builtins.py]: https://github.com/omnilib/aioitertools/blob/master/aioitertools/builtins.py
 [itertools.py]: https://github.com/omnilib/aioitertools/blob/master/aioitertools/itertools.py
