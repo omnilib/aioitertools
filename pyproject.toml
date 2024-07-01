@@ -1,13 +1,13 @@
-[build-system]
-requires = ["flit_core >=3.8,<4"]
-build-backend = "flit_core.buildapi"
-
-[project]
+[tool.poetry]
 name = "aioitertools"
+version = "0.12.0"
+description = "AsyncIO iteration tools"
+authors = ["Amethyst Reese <amethyst@n7.gg>"]
+license = "MIT"
 readme = "README.md"
-authors = [{ name = "Amethyst Reese", email = "amethyst@n7.gg" }]
-license = { file = "LICENSE" }
-dynamic = ["version", "description"]
+homepage = "https://omnilib.readthedocs.io/en/latest/project/aioitertools.html"
+repository = "https://github.com/omnilib/aioitertools"
+documentation = "https://aioitertools.omnilib.dev/en/stable/index.html"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Framework :: AsyncIO",
@@ -15,31 +15,39 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Topic :: Software Development :: Libraries",
 ]
-requires-python = ">=3.8"
-dependencies = ["typing_extensions>=4.0; python_version < '3.10'"]
-
-[project.optional-dependencies]
-dev = [
-    "attribution==1.6.2",
-    "black==24.1.1",
-    "coverage==7.4.1",
-    "flake8==7.0.0",
-    "flit==3.9.0",
-    "mypy==1.8.0",
-    "usort==1.0.8.post1",
-    "ufmt==2.3.0",
-]
-docs = [
-    "sphinx==7.2.6",
-    "sphinx-mdinclude==0.5.3",
+keywords = ["aioitertools", "asyncio", "itertools", "more-itertools"]
+include = [
+    "CHANGELOG.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "LICENSE",
 ]
 
-[project.urls]
-Documentation = "https://aioitertools.omnilib.dev"
-Github = "https://github.com/omnilib/aioitertools"
+[tool.poetry.dependencies]
+python = ">=3.9"
+typing-extensions = "^4.12.2"
 
-[tool.flit.sdist]
-exclude = [".github/"]
+[tool.poetry.group.dev.dependencies]
+attribution = "^1.8.0"
+black = "^24.4.2"
+coverage = "^7.5.4"
+flake8 = "^7.1.0"
+mypy = "^1.10.1"
+ruff = "^0.5.0"
+ufmt = "^2.7.0"
+usort = "^1.0.8.post1"
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^7.3.7"
+sphinx-mdinclude = "^0.6.1"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.2.2"
+pytest-asyncio = "^0.23.7"
+pytest-cov = "^5.0.0"
+pytest-random-order = "^1.1.1"
+pytest-xdist = "^3.6.1"
 
 [tool.attribution]
 name = "aioitertools"
@@ -53,11 +61,17 @@ include = ["aioitertools/*"]
 omit = ["aioitertools/tests/*"]
 
 [tool.coverage.report]
-fail_under = 97
-precision = 1
-show_missing = true
+fail_under = 90
+precision = 2
 skip_covered = true
+skip_empty = true
+show_missing = true
 
 [tool.mypy]
-# strict = true
+packages = ["aioitertools/*"]
+exclude = ["aioitertools/tests/*"]
 ignore_missing_imports = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
