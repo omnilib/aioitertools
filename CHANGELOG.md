@@ -7,9 +7,9 @@
 Feature release
 
 - Python:
-  - Drop Python 3.6 support in favour to Python 3.9 and newer
+  - Drop Python 3.6 support in favour of Python 3.9 and higher
 - Project:
-  - Replace [Flit](https://pypi.org/project/flit/) package manager with [Poetry](https://python-poetry.org/) package and dependency manager
+  - Replace [Flit](https://pypi.org/project/flit/) package manager with [Poetry](https://python-poetry.org/)
 
 ## v0.11.0
 
