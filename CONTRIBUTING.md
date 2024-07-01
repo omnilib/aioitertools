@@ -2,7 +2,7 @@
 
 ## Preparation
 
-You'll need to have Python 3.8 available for testing.
+You'll need to have Python 3.9 available for testing.
 I recommend using [pyenv](https://github.com/pyenv/pyenv) for this:
 
 ```shell
