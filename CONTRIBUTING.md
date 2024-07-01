@@ -6,8 +6,8 @@ You'll need to have Python 3.8 available for testing.
 I recommend using [pyenv](https://github.com/pyenv/pyenv) for this:
 
 ```shell
-pyenv install 3.8
-pyenv shell 3.8
+pyenv install 3.9
+pyenv shell 3.9
 ```
 
 ## Setup
