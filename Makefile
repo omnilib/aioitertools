@@ -22,7 +22,7 @@ test:
 	python -m coverage report
 	python -m mypy -p $(PKG)
 
-html: venv README.md docs/*
+docs-html: venv README.md docs/*
 	sphinx-build -b html docs html
 
 clean:
