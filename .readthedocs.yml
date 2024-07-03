@@ -14,4 +14,4 @@ build:
     post_create_environment:
       - pip install poetry
     post_install:
-      - poetry install --with docs
+      - VIRTUAL_ENV=$READTHEDOCS_VIRTUALENV_PATH poetry install --with docs
