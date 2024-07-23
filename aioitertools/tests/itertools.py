@@ -78,6 +78,27 @@ class ItertoolsTest(TestCase):
         self.assertEqual(values, [])
 
     @async_test
+    async def test_batched(self):
+        test_matrix = [
+            ([], 1, []),
+            ([1, 2, 3], 1, [(1,), (2,), (3,)]),
+            ([2, 3, 4], 2, [(2, 3), (4,)]),
+            ([5, 6], 3, [(5, 6)]),
+            (ait.iter([-2, -1, 0, 1, 2]), 2, [(-2, -1), (0, 1), (2,)]),
+        ]
+        for iterable, batch_size, answer in test_matrix:
+            result = [batch async for batch in ait.batched(iterable, batch_size)]
+
+            self.assertEqual(result, answer)
+
+    @async_test
+    async def test_batched_errors(self):
+        with self.assertRaises(ValueError):
+            [batch async for batch in ait.batched([1], 0)]
+        with self.assertRaises(ValueError):
+            [batch async for batch in ait.batched([1, 2, 3], 2, strict=True)]
+
+    @async_test
     async def test_chain_lists(self):
         it = ait.chain(slist, srange)
         for k in ["A", "B", "C", 1, 2, 3]:

@@ -19,7 +19,7 @@ import itertools
 import operator
 from typing import Any, AsyncIterator, List, Optional, overload, Tuple
 
-from .builtins import enumerate, iter, list, next, zip
+from .builtins import enumerate, iter, list, next, tuple, zip
 from .helpers import maybe_await
 from .types import (
     Accumulator,
@@ -64,6 +64,26 @@ async def accumulate(
     async for item in itr:
         total = await maybe_await(func(total, item))
         yield total
+
+
+async def batched(
+    iterable: AnyIterable[T],
+    batch_size: int,
+    *,
+    strict=False,
+) -> AsyncIterator[Tuple[T, ...]]:
+    if batch_size < 1:
+        raise ValueError(f"batch size (={batch_size}) must be at least one")
+    aiterator = iter(iterable)
+    while True:
+        batch: Tuple[T, ...] = await tuple(
+            item async for item in islice(aiterator, batch_size)
+        )
+        if not batch:
+            break
+        if strict and len(batch) != batch_size:
+            raise ValueError(f"the batch {batch!r} is incomplete")
+        yield batch
 
 
 class Chain:
@@ -517,7 +537,7 @@ def tee(itr: AnyIterable[T], n: int = 2) -> Tuple[AsyncIterator[T], ...]:
                     break
                 yield value
 
-    return tuple(gen(k, q) for k, q in builtins.enumerate(queues))
+    return builtins.tuple(gen(k, q) for k, q in builtins.enumerate(queues))
 
 
 async def zip_longest(
@@ -556,4 +576,4 @@ async def zip_longest(
                 raise value
         if finished >= itr_count:
             break
-        yield tuple(values)
+        yield builtins.tuple(values)
