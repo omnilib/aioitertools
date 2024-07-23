@@ -3,21 +3,22 @@
 ## Preparation
 
 You'll need to have Python 3.6 available for testing.
-I recommend using [pyenv][] for this:
+I recommend using [pyenv][pyenv] for this:
 
-    $ pyenv install 3.6.5
-    $ pyenv shell 3.6.5
-
+```shell
+pyenv install 3.6.5
+pyenv shell 3.6.5
+```
 
 ## Setup
 
-Create a fresh development enviroment, and install the
-appropriate tools and dependencies:
+Create a fresh development enviroment, and install the appropriate tools and dependencies:
 
-    $ cd <path/to/aioitertools>
-    $ make venv
-    $ source .venv/bin/activate
-
+```shell
+cd <path/to/aioitertools>
+make venv
+source .venv/bin/activate
+```
 
 ## Submitting
 

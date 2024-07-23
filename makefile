@@ -19,12 +19,12 @@ format:
 
 lint:
 	python -m flake8 $(PKG)
+	python -m mypy -p $(PKG)
 	python -m ufmt check $(PKG)
 
-test:
+test: lint
 	python -m coverage run -m $(PKG).tests
 	python -m coverage report
-	python -m mypy -p $(PKG)
 
 html: .venv README.md docs/*
 	source .venv/bin/activate && sphinx-build -b html docs html
