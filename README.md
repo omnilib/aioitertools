@@ -15,8 +15,9 @@ Install
 aioitertools requires Python 3.8 or newer.
 You can install it from PyPI:
 
-    $ pip install aioitertools
-
+```sh
+$ pip install aioitertools
+```
 
 Usage
 -----

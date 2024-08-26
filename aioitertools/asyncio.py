@@ -253,7 +253,7 @@ async def gather_iter(
     limit: int = -1,
 ) -> List[T]:
     """
-    Wrapper around gather to handle gathering an iterable instead of *args.
+    Wrapper around gather to handle gathering an iterable instead of ``*args``.
 
     Note that the iterable values don't have to be awaitable.
     """
