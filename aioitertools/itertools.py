@@ -68,21 +68,25 @@ async def accumulate(
 
 async def batched(
     iterable: AnyIterable[T],
-    batch_size: int,
+    n: int,
     *,
-    strict=False,
+    strict: bool = False,
 ) -> AsyncIterator[Tuple[T, ...]]:
-    if batch_size < 1:
-        raise ValueError(f"batch size (={batch_size}) must be at least one")
+    """
+    Yield batches of values from the given iterable. The final batch may be shorter.
+
+    Example::
+
+        async for batch in batched(range(15), 5):
+            ...  # (0, 1, 2, 3, 4), (5, 6, 7, 8, 9), (10, 11, 12, 13, 14)
+
+    """
+    if n < 1:
+        raise ValueError("n must be at least one")
     aiterator = iter(iterable)
-    while True:
-        batch: Tuple[T, ...] = await tuple(
-            item async for item in islice(aiterator, batch_size)
-        )
-        if not batch:
-            break
-        if strict and len(batch) != batch_size:
-            raise ValueError(f"the batch {batch!r} is incomplete")
+    while batch := await tuple(islice(aiterator, n)):
+        if strict and len(batch) != n:
+            raise ValueError("batched: incomplete batch")
         yield batch
 
 

@@ -5,7 +5,7 @@ import inspect
 import sys
 from typing import Awaitable, Union
 
-from aioitertools.types import T
+from .types import T
 
 if sys.version_info < (3, 8):  # pragma: no cover
     from typing_extensions import Protocol

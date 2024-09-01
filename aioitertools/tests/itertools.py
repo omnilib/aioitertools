@@ -93,9 +93,9 @@ class ItertoolsTest(TestCase):
 
     @async_test
     async def test_batched_errors(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, "n must be at least one"):
             [batch async for batch in ait.batched([1], 0)]
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, "incomplete batch"):
             [batch async for batch in ait.batched([1, 2, 3], 2, strict=True)]
 
     @async_test
