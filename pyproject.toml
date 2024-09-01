@@ -30,7 +30,7 @@ dev = [
     "ufmt==2.7.0",
 ]
 docs = [
-    "sphinx==7.2.6",
+    "sphinx==8.0.2",
     "sphinx-mdinclude==0.6.2",
 ]
 
