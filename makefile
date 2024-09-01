@@ -1,11 +1,10 @@
 PKG:=aioitertools
 EXTRAS:=dev,docs
 
-UV_FLAGS?=
 UV_VERSION:=$(shell uv --version)
 ifdef UV_VERSION
 	VENV:=uv venv
-	PIP:=uv pip $(UV_FLAGS)
+	PIP:=uv pip
 else
 	VENV:=python -m venv
 	PIP:=python -m pip

@@ -17,7 +17,7 @@ jobs:
         os: [macOS-latest, ubuntu-latest, windows-latest]
 
     env:
-      UV_FLAGS: --system
+      UV_SYSTEM_PYTHON: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
