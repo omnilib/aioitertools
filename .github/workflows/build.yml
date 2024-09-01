@@ -36,6 +36,10 @@ jobs:
           source .venv/bin/activate
           make EXTRAS=dev install
       - name: Test
-        run: make test
+        run: |
+          source .venv/bin/activate
+          make test
       - name: Lint
-        run: make lint
+        run: |
+          source .venv/bin/activate
+          make lint
