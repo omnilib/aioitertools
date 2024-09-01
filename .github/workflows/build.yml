@@ -7,10 +7,6 @@ on:
       - v*
   pull_request:
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   aioitertools:
     runs-on: ${{ matrix.os }}
@@ -20,6 +16,8 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
         os: [macOS-latest, ubuntu-latest, windows-latest]
 
+    env:
+      UV_FLAGS: --system
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,15 +29,8 @@ jobs:
         with:
           cache-dependency-path: pyproject.toml
       - name: Install
-        run: |
-          make .venv
-          source .venv/bin/activate
-          make EXTRAS=dev install
+        run: make EXTRAS=dev install
       - name: Test
-        run: |
-          source .venv/bin/activate
-          make test
+        run: make test
       - name: Lint
-        run: |
-          source .venv/bin/activate
-          make lint
+        run: make lint
