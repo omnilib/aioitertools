@@ -32,7 +32,7 @@ jobs:
           cache-dependency-path: pyproject.toml
       - name: Install
         run: |
-          make venv
+          make .venv
           source .venv/bin/activate
           make EXTRAS=dev install
       - name: Test

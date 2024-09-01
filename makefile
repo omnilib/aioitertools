@@ -12,10 +12,10 @@ endif
 
 .venv:
 	$(VENV) .venv
-	source .venv/bin/activate && make install
-	echo 'run `source .venv/bin/activate` to use virtualenv'
 
 venv: .venv
+	source .venv/bin/activate && make install
+	echo 'run `source .venv/bin/activate` to use virtualenv'
 
 install:
 	$(PIP) install -Ue .[$(EXTRAS)]
