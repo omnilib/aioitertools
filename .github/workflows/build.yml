@@ -27,7 +27,10 @@ jobs:
         with:
           cache-dependency-path: pyproject.toml
       - name: Install
-        run: make EXTRAS=dev install
+        run: |
+          make venv
+          source .venv/bin/activate
+          make EXTRAS=dev install
       - name: Test
         run: make test
       - name: Lint
