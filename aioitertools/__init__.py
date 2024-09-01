@@ -25,6 +25,7 @@ from .builtins import (
 )
 from .itertools import (
     accumulate,
+    batched,
     chain,
     combinations,
     combinations_with_replacement,
