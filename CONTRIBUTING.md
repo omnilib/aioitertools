@@ -2,11 +2,11 @@
 
 ## Preparation
 
-You'll need to have Python 3.6 available for testing.
+You'll need to have Python 3.8 or newer available for testing.
 I recommend using [pyenv][] for this:
 
-    $ pyenv install 3.6.5
-    $ pyenv shell 3.6.5
+    $ pyenv install 3.12
+    $ pyenv shell 3.12
 
 
 ## Setup
@@ -28,6 +28,6 @@ that you have done the following:
 * Added appropriate license headers to new files
 * Written or modified tests for new functionality
 * Used `make format` to format code appropriately
-* Validated and tested code with `make lint test`
+* Validated and tested code with `make test lint`
 
 [pyenv]: https://github.com/pyenv/pyenv
