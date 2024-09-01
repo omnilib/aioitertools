@@ -1,15 +1,24 @@
 PKG:=aioitertools
 EXTRAS:=dev,docs
 
+UV_VERSION:=$(shell uv --version)
+ifdef UV_VERSION
+	VENV:=uv venv
+	PIP:=uv pip
+else
+	VENV:=python -m venv
+	PIP:=python -m pip
+endif
+
 .venv:
-	python -m venv .venv
+	$(VENV) .venv
 	source .venv/bin/activate && make install
 	echo 'run `source .venv/bin/activate` to use virtualenv'
 
 venv: .venv
 
 install:
-	python -m pip install -Ue .[$(EXTRAS)]
+	$(PIP) install -Ue .[$(EXTRAS)]
 
 release: lint test clean
 	flit publish
