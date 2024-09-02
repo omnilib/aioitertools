@@ -10,6 +10,9 @@ on:
 permissions:
   contents: read
 
+env:
+  UV_SYSTEM_PYTHON: 1
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -19,8 +22,6 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
         os: [macOS-latest, ubuntu-latest, windows-latest]
 
-    env:
-      UV_SYSTEM_PYTHON: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
