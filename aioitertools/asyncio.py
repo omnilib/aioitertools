@@ -8,6 +8,7 @@ Provisional library.  Must be imported as `aioitertools.asyncio`.
 """
 
 import asyncio
+from contextlib import suppress
 import time
 from typing import (
     Any,
@@ -116,56 +117,60 @@ async def as_generated(
             ...  # intermixed values yielded from gen1 and gen2
     """
 
-    exc_queue: asyncio.Queue[Exception] = asyncio.Queue()
-    queue: asyncio.Queue[T] = asyncio.Queue()
+    queue: asyncio.Queue[dict] = asyncio.Queue()
 
-    async def tailer(iter: AsyncIterable[T]) -> None:
+    tailer_count: int = 0
+
+    async def tailer(iterable: AsyncIterable[T]) -> None:
+        nonlocal tailer_count
+
         try:
-            async for item in iter:
-                await queue.put(item)
+            async for item in iterable:
+                await queue.put({"value": item})
         except asyncio.CancelledError:
-            if isinstance(iter, AsyncGenerator):  # pragma:nocover
-                await iter.aclose()
+            if isinstance(iterable, AsyncGenerator):  # pragma:nocover
+                with suppress(Exception):
+                    await iterable.aclose()
             raise
-        except Exception as e:
-            await exc_queue.put(e)
+        except Exception as exc:
+            await queue.put({"exception": exc})
+        finally:
+            tailer_count -= 1
+
+            if tailer_count == 0:
+                await queue.put({"done": True})
 
     tasks = [asyncio.ensure_future(tailer(iter)) for iter in iterables]
-    pending = set(tasks)
+
+    if not tasks:
+        # Nothing to do
+        return
+
+    tailer_count = len(tasks)
 
     try:
-        while pending:
-            try:
-                exc = exc_queue.get_nowait()
+        while True:
+            i = await queue.get()
+
+            if "value" in i:
+                yield i["value"]
+            elif "exception" in i:
                 if return_exceptions:
-                    yield exc  # type: ignore
+                    yield i["exception"]
                 else:
-                    raise exc
-            except asyncio.QueueEmpty:
-                pass
-
-            try:
-                value = queue.get_nowait()
-                yield value
-            except asyncio.QueueEmpty:
-                for task in list(pending):
-                    if task.done():
-                        pending.remove(task)
-                await asyncio.sleep(0.001)
-
+                    raise i["exception"]
+            elif "done" in i:
+                break
     except (asyncio.CancelledError, GeneratorExit):
         pass
-
     finally:
         for task in tasks:
             if not task.done():
                 task.cancel()
 
         for task in tasks:
-            try:
+            with suppress(asyncio.CancelledError):
                 await task
-            except asyncio.CancelledError:
-                pass
 
 
 async def gather(
