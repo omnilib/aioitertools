@@ -5,19 +5,21 @@
 You'll need to have Python 3.8 or newer available for testing.
 I recommend using [pyenv][] for this:
 
-    $ pyenv install 3.12
-    $ pyenv shell 3.12
-
+```sh
+$ pyenv install 3.12
+$ pyenv shell 3.12
+```
 
 ## Setup
 
 Create a fresh development enviroment, and install the
 appropriate tools and dependencies:
 
-    $ cd <path/to/aioitertools>
-    $ make venv
-    $ source .venv/bin/activate
-
+```sh
+$ cd <path/to/aioitertools>
+$ make venv
+$ source .venv/bin/activate
+```
 
 ## Submitting
 
