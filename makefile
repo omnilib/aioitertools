@@ -1,8 +1,8 @@
 PKG:=aioitertools
 EXTRAS:=dev,docs
 
-UV_VERSION:=$(shell uv --version)
-ifdef UV_VERSION
+UV:=$(shell uv --version)
+ifdef UV
 	VENV:=uv venv
 	PIP:=uv pip
 else

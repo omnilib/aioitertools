@@ -1,0 +1,74 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        os: [macOS-latest, ubuntu-latest, windows-latest]
+
+    env:
+      UV_SYSTEM_PYTHON: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set Up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
+      - uses: hynek/setup-cached-uv@v2
+        with:
+          cache-dependency-path: pyproject.toml
+      - name: Install
+        run: make EXTRAS=dev install
+      - name: Test
+        run: make test
+      - name: Lint
+        run: make lint
+
+  sdist:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: hynek/setup-cached-uv@v2
+        with:
+          cache-dependency-path: pyproject.toml
+      - name: Install
+        run: make install
+      - name: Build
+        run: python -m build --sdist
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: sdist
+          path: dist
+  
+  publish:
+    needs: sdist
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: sdist
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
