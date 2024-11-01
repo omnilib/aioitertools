@@ -26,7 +26,7 @@ dev = [
     "coverage==7.6.1",
     "flake8==7.1.1",
     "flit==3.9.0",
-    "mypy==1.11.2",
+    "mypy==1.13.0",
     "usort==1.0.8.post1",
     "ufmt==2.7.1",
 ]
