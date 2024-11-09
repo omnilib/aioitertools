@@ -2,7 +2,6 @@
 # Licensed under the MIT license
 
 import inspect
-import sys
 from typing import Awaitable, Union
 
 from .types import T
