@@ -7,10 +7,7 @@ from typing import Awaitable, Union
 
 from .types import T
 
-if sys.version_info < (3, 8):  # pragma: no cover
-    from typing_extensions import Protocol
-else:  # pragma: no cover
-    from typing import Protocol
+from typing import Protocol
 
 
 class Orderable(Protocol):  # pragma: no cover
