@@ -1,28 +1,26 @@
 [build-system]
-requires = ["flit_core >=3.8,<4"]
+requires = ["flit_core >=3.11,<4"]
 build-backend = "flit_core.buildapi"
 
 [project]
 name = "aioitertools"
 readme = "README.md"
 authors = [{ name = "Amethyst Reese", email = "amethyst@n7.gg" }]
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = ["LICENSE"]
 dynamic = ["version", "description"]
 classifiers = [
-    "Development Status :: 4 - Beta",
     "Framework :: AsyncIO",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Topic :: Software Development :: Libraries",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = ["typing_extensions>=4.0; python_version < '3.10'"]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "attribution==1.8.0",
     "black==24.8.0",
-    "build>=1.2",
     "coverage==7.6.1",
     "flake8==7.1.1",
     "flit==3.9.0",
@@ -37,6 +35,7 @@ docs = [
 
 [project.urls]
 Documentation = "https://aioitertools.omnilib.dev"
+Changelog = "https://aioitertools.omnilib.dev/en/latest/changelog.html"
 Github = "https://github.com/omnilib/aioitertools"
 
 [tool.flit.sdist]
@@ -62,3 +61,6 @@ skip_covered = true
 [tool.mypy]
 # strict = true
 ignore_missing_imports = true
+
+[tool.uv.dependency-groups]
+docs = {requires-python=">=3.10"}
