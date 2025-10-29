@@ -6,7 +6,7 @@ Implementation of itertools, builtins, and more for AsyncIO and mixed-type itera
 [![documentation](https://readthedocs.org/projects/aioitertools/badge/?version=latest)](https://aioitertools.omnilib.dev)
 [![version](https://img.shields.io/pypi/v/aioitertools.svg)](https://pypi.org/project/aioitertools)
 [![changelog](https://img.shields.io/badge/change-log-blue)](https://aioitertools.omnilib.dev/en/latest/changelog.html)
-[![license](https://img.shields.io/pypi/l/aioitertools.svg)](https://github.com/omnilib/aioitertools/blob/master/LICENSE)
+[![license](https://img.shields.io/pypi/l/aioitertools.svg)](https://github.com/omnilib/aioitertools/blob/main/LICENSE)
 
 
 Install
@@ -85,6 +85,6 @@ source license.  This is my personal repository; the license you receive to
 my code is from me and not from my employer. See the `LICENSE` file for details.
 
 
-[builtins.py]: https://github.com/omnilib/aioitertools/blob/master/aioitertools/builtins.py
-[itertools.py]: https://github.com/omnilib/aioitertools/blob/master/aioitertools/itertools.py
-[more_itertools.py]: https://github.com/omnilib/aioitertools/blob/master/aioitertools/more_itertools.py
+[builtins.py]: https://github.com/omnilib/aioitertools/blob/main/aioitertools/builtins.py
+[itertools.py]: https://github.com/omnilib/aioitertools/blob/main/aioitertools/itertools.py
+[more_itertools.py]: https://github.com/omnilib/aioitertools/blob/main/aioitertools/more_itertools.py
