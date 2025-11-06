@@ -17,7 +17,8 @@ import asyncio
 import builtins
 import itertools
 import operator
-from typing import Any, AsyncIterator, List, Optional, overload, Tuple
+from collections.abc import AsyncIterator
+from typing import Any, Optional, overload
 
 from .builtins import enumerate, iter, list, next, tuple, zip
 from .helpers import maybe_await
@@ -71,7 +72,7 @@ async def batched(
     n: int,
     *,
     strict: bool = False,
-) -> AsyncIterator[Tuple[T, ...]]:
+) -> AsyncIterator[builtins.tuple[T, ...]]:
     """
     Yield batches of values from the given iterable. The final batch may be shorter.
 
@@ -119,7 +120,9 @@ class Chain:
 chain = Chain()
 
 
-async def combinations(itr: AnyIterable[T], r: int) -> AsyncIterator[Tuple[T, ...]]:
+async def combinations(
+    itr: AnyIterable[T], r: int
+) -> AsyncIterator[builtins.tuple[T, ...]]:
     """
     Yield r length subsequences from the given iterable.
 
@@ -132,14 +135,14 @@ async def combinations(itr: AnyIterable[T], r: int) -> AsyncIterator[Tuple[T, ..
             ...  # (0, 1, 2), (0, 1, 3), (0, 2, 3), (1, 2, 3)
 
     """
-    pool: List[T] = await list(itr)
+    pool: builtins.list[T] = await list(itr)
     for value in itertools.combinations(pool, r):
         yield value
 
 
 async def combinations_with_replacement(
     itr: AnyIterable[T], r: int
-) -> AsyncIterator[Tuple[T, ...]]:
+) -> AsyncIterator[builtins.tuple[T, ...]]:
     """
     Yield r length subsequences from the given iterable with replacement.
 
@@ -152,7 +155,7 @@ async def combinations_with_replacement(
             ...  # ("A", "A"), ("A", "B"), ("A", "C"), ("B", "B"), ...
 
     """
-    pool: List[T] = await list(itr)
+    pool: builtins.list[T] = await list(itr)
     for value in itertools.combinations_with_replacement(pool, r):
         yield value
 
@@ -264,20 +267,22 @@ async def filterfalse(
 
 
 @overload
-def groupby(itr: AnyIterable[T]) -> AsyncIterator[Tuple[T, List[T]]]:  # pragma: nocover
+def groupby(
+    itr: AnyIterable[T],
+) -> AsyncIterator[builtins.tuple[T, builtins.list[T]]]:  # pragma: nocover
     pass
 
 
 @overload
 def groupby(
     itr: AnyIterable[T], key: KeyFunction[T, R]
-) -> AsyncIterator[Tuple[R, List[T]]]:  # pragma: nocover
+) -> AsyncIterator[builtins.tuple[R, builtins.list[T]]]:  # pragma: nocover
     pass
 
 
 async def groupby(
     itr: AnyIterable[T], key: Optional[KeyFunction[T, R]] = None
-) -> AsyncIterator[Tuple[Any, List[T]]]:
+) -> AsyncIterator[builtins.tuple[Any, builtins.list[T]]]:
     """
     Yield consecutive keys and groupings from the given iterable.
 
@@ -298,7 +303,7 @@ async def groupby(
     if key is None:
         key = lambda x: x  # noqa: E731
 
-    grouping: List[T] = []
+    grouping: builtins.list[T] = []
 
     it = iter(itr)
     try:
@@ -385,7 +390,7 @@ async def islice(itr: AnyIterable[T], *args: Optional[int]) -> AsyncIterator[T]:
 
 async def permutations(
     itr: AnyIterable[T], r: Optional[int] = None
-) -> AsyncIterator[Tuple[T, ...]]:
+) -> AsyncIterator[builtins.tuple[T, ...]]:
     """
     Yield r length permutations of elements in the iterable.
 
@@ -398,14 +403,14 @@ async def permutations(
             ...  # (0, 1, 2), (0, 2, 1), (1, 0, 2), ...
 
     """
-    pool: List[T] = await list(itr)
+    pool: builtins.list[T] = await list(itr)
     for value in itertools.permutations(pool, r):
         yield value
 
 
 async def product(
     *itrs: AnyIterable[T], repeat: int = 1
-) -> AsyncIterator[Tuple[T, ...]]:
+) -> AsyncIterator[builtins.tuple[T, ...]]:
     """
     Yield cartesian products of all iterables.
 
@@ -422,6 +427,7 @@ async def product(
 
     """
     pools = await asyncio.gather(*[list(itr) for itr in itrs])
+    value: builtins.tuple[T, ...]
     for value in itertools.product(*pools, repeat=repeat):
         yield value
 
@@ -489,7 +495,7 @@ async def takewhile(
             break
 
 
-def tee(itr: AnyIterable[T], n: int = 2) -> Tuple[AsyncIterator[T], ...]:
+def tee(itr: AnyIterable[T], n: int = 2) -> builtins.tuple[AsyncIterator[T], ...]:
     """
     Return n iterators that each yield items from the given iterable.
 
@@ -516,7 +522,7 @@ def tee(itr: AnyIterable[T], n: int = 2) -> Tuple[AsyncIterator[T], ...]:
     """
     assert n > 0
     sentinel = object()
-    queues: List[asyncio.Queue] = [asyncio.Queue() for k in range(n)]
+    queues: builtins.list[asyncio.Queue] = [asyncio.Queue() for k in range(n)]
 
     async def gen(k: int, q: asyncio.Queue) -> AsyncIterator[T]:
         if k == 0:
@@ -546,7 +552,7 @@ def tee(itr: AnyIterable[T], n: int = 2) -> Tuple[AsyncIterator[T], ...]:
 
 async def zip_longest(
     *itrs: AnyIterable[Any], fillvalue: Any = None
-) -> AsyncIterator[Tuple[Any, ...]]:
+) -> AsyncIterator[builtins.tuple[Any, ...]]:
     """
     Yield a tuple of items from mixed iterables until all are consumed.
 
@@ -563,7 +569,7 @@ async def zip_longest(
             b  # 0, 1, 2,  3,  4
 
     """
-    its: List[AsyncIterator[Any]] = [iter(itr) for itr in itrs]
+    its: builtins.list[AsyncIterator[Any]] = [iter(itr) for itr in itrs]
     itr_count = len(its)
     finished = 0
 

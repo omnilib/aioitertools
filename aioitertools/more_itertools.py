@@ -2,7 +2,8 @@
 # Licensed under the MIT license
 
 import asyncio
-from typing import AsyncIterable, List, Tuple, TypeVar
+from collections.abc import AsyncIterable
+from typing import TypeVar
 
 from aioitertools.helpers import maybe_await
 
@@ -14,7 +15,7 @@ from .types import AnyIterable, Predicate
 T = TypeVar("T")
 
 
-async def take(n: int, iterable: AnyIterable[T]) -> List[T]:
+async def take(n: int, iterable: AnyIterable[T]) -> list[T]:
     """
     Return the first n items of iterable as a list.
 
@@ -31,7 +32,7 @@ async def take(n: int, iterable: AnyIterable[T]) -> List[T]:
     return [item async for item in islice(iterable, n)]
 
 
-async def chunked(iterable: AnyIterable[T], n: int) -> AsyncIterable[List[T]]:
+async def chunked(iterable: AnyIterable[T], n: int) -> AsyncIterable[list[T]]:
     """
     Break iterable into chunks of length n.
 
@@ -52,7 +53,7 @@ async def chunked(iterable: AnyIterable[T], n: int) -> AsyncIterable[List[T]]:
 
 async def before_and_after(
     predicate: Predicate[T], iterable: AnyIterable[T]
-) -> Tuple[AsyncIterable[T], AsyncIterable[T]]:
+) -> tuple[AsyncIterable[T], AsyncIterable[T]]:
     """
     A variant of :func:`aioitertools.takewhile` that allows complete access to the
     remainder of the iterator.

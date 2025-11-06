@@ -1,8 +1,6 @@
 # Copyright 2022 Amethyst Reese
 # Licensed under the MIT license
 
-# ruff: noqa F401
-
 """
 itertools and builtins for AsyncIO and mixed iterables
 """

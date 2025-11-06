@@ -1,7 +1,7 @@
 # Copyright 2022 Amethyst Reese
 # Licensed under the MIT license
 
-from typing import AsyncIterable
+from collections.abc import AsyncIterable
 from unittest import TestCase
 
 import aioitertools.more_itertools as mit

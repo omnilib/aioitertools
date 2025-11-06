@@ -62,5 +62,12 @@ skip_covered = true
 # strict = true
 ignore_missing_imports = true
 
+[tool.ruff.lint]
+extend-select = ["UP"]
+ignore = ["UP029"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
 [tool.uv.dependency-groups]
 docs = {requires-python=">=3.10"}

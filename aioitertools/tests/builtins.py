@@ -2,7 +2,7 @@
 # Licensed under the MIT license
 
 import asyncio
-from typing import AsyncIterator
+from collections.abc import AsyncIterator
 from unittest import TestCase
 
 import aioitertools as ait
