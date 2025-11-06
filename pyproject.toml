@@ -20,7 +20,7 @@ dependencies = ["typing_extensions>=4.0; python_version < '3.10'"]
 [dependency-groups]
 dev = [
     "attribution==1.8.0",
-    "black==24.8.0",
+    "black==25.9.0",
     "coverage==7.10.7",
     "flake8==7.1.1",
     "flit==3.12.0",
