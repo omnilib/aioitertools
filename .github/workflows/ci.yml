@@ -44,13 +44,15 @@ jobs:
         run: make lint
 
   compat:
+    env:
+      UV_RESOLUTION: lowest-direct
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - uses: astral-sh/setup-uv@v7
         with:
           python-version: "3.9"
-      - run: uv sync --resolution lowest
+      - run: uv sync
       - run: make test lint
 
   build:

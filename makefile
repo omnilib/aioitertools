@@ -18,7 +18,7 @@ html: .venv README.md docs/*
 	uv run --group docs sphinx-build -b html docs html
 
 clean:
-	rm -rf .mypy_cache build dist html README MANIFEST *.egg-info
+	rm -rf .mypy_cache uv.lock build dist html README MANIFEST *.egg-info
 
 distclean: clean
 	rm -rf .venv
