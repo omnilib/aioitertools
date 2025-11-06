@@ -1,5 +1,7 @@
-# Copyright 2022 Amethyst Reese
+# Copyright Amethyst Reese
 # Licensed under the MIT license
+
+# ruff: noqa F401
 
 from .asyncio import AsyncioTest
 from .builtins import BuiltinsTest

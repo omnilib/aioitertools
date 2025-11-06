@@ -6,7 +6,7 @@ format:
 	uv run ufmt format $(PKG)
 
 lint:
-	uv run flake8 $(PKG)
+	uv run ruff check $(PKG)
 	uv run ufmt check $(PKG)
 
 test:
