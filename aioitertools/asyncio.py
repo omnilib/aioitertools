@@ -12,11 +12,7 @@ import time
 from typing import (
     Any,
     cast,
-    Dict,
-    List,
     Optional,
-    Set,
-    Tuple,
 )
 from collections.abc import AsyncGenerator, AsyncIterable, Awaitable, Iterable
 
@@ -44,8 +40,8 @@ async def as_completed(
             ...  # use value immediately
 
     """
-    done: Set[Awaitable[T]] = set()
-    pending: Set[Awaitable[T]] = {asyncio.ensure_future(a) for a in aws}
+    done: set[Awaitable[T]] = set()
+    pending: set[Awaitable[T]] = {asyncio.ensure_future(a) for a in aws}
     remaining: Optional[float] = None
 
     if timeout and timeout > 0:
@@ -72,7 +68,7 @@ async def as_completed(
         # asyncio.Future: https://github.com/python/typeshed/blob/72ff7b94e534c610ddf8939bacbc55343e9465d2/stdlib/3/asyncio/futures.pyi#L30  # noqa: E501
         # asyncio.wait(): https://github.com/python/typeshed/blob/72ff7b94e534c610ddf8939bacbc55343e9465d2/stdlib/3/asyncio/tasks.pyi#L89  # noqa: E501
         done, pending = cast(
-            Tuple[Set[Awaitable[T]], Set[Awaitable[T]]],
+            tuple[set[Awaitable[T]], set[Awaitable[T]]],
             await asyncio.wait(
                 pending,
                 timeout=remaining,
@@ -169,7 +165,7 @@ async def gather(
     *args: Awaitable[T],
     return_exceptions: bool = False,
     limit: int = -1,
-) -> List[Any]:
+) -> list[Any]:
     """
     Like asyncio.gather but with a limit on concurrency.
 
@@ -186,13 +182,13 @@ async def gather(
     """
 
     # For detecting input duplicates and reconciling them at the end
-    input_map: Dict[Awaitable[T], List[int]] = {}
+    input_map: dict[Awaitable[T], list[int]] = {}
     # This is keyed on what we'll get back from asyncio.wait
-    pos: Dict[asyncio.Future[T], int] = {}
-    ret: List[Any] = [None] * len(args)
+    pos: dict[asyncio.Future[T], int] = {}
+    ret: list[Any] = [None] * len(args)
 
-    pending: Set[asyncio.Future[T]] = set()
-    done: Set[asyncio.Future[T]] = set()
+    pending: set[asyncio.Future[T]] = set()
+    done: set[asyncio.Future[T]] = set()
 
     next_arg = 0
 
@@ -248,7 +244,7 @@ async def gather_iter(
     itr: AnyIterable[MaybeAwaitable[T]],
     return_exceptions: bool = False,
     limit: int = -1,
-) -> List[T]:
+) -> list[T]:
     """
     Wrapper around gather to handle gathering an iterable instead of ``*args``.
 

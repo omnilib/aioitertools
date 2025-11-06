@@ -18,11 +18,8 @@ from typing import (
     Any,
     Callable,
     cast,
-    List,
     Optional,
     overload,
-    Set,
-    Tuple,
     Union,
 )
 from collections.abc import AsyncIterable, AsyncIterator, Iterable
@@ -148,7 +145,7 @@ async def next(
         return default
 
 
-async def list(itr: AnyIterable[T]) -> List[T]:
+async def list(itr: AnyIterable[T]) -> list[T]:
     """
     Consume a mixed iterable and return a list of items in order.
 
@@ -161,7 +158,7 @@ async def list(itr: AnyIterable[T]) -> List[T]:
     return [item async for item in iter(itr)]
 
 
-async def tuple(itr: AnyIterable[T]) -> Tuple[T, ...]:
+async def tuple(itr: AnyIterable[T]) -> tuple[T, ...]:
     """
     Consume a mixed iterable and return a tuple of items in order.
 
@@ -175,7 +172,7 @@ async def tuple(itr: AnyIterable[T]) -> Tuple[T, ...]:
     return builtins.tuple(await list(itr))
 
 
-async def set(itr: AnyIterable[T]) -> Set[T]:
+async def set(itr: AnyIterable[T]) -> set[T]:
     """
     Consume a mixed iterable and return a set of items.
 
@@ -190,7 +187,7 @@ async def set(itr: AnyIterable[T]) -> Set[T]:
 
 async def enumerate(
     itr: AnyIterable[T], start: int = 0
-) -> AsyncIterator[Tuple[int, T]]:
+) -> AsyncIterator[builtins.tuple[int, T]]:
     """
     Consume a mixed iterable and yield the current index and item.
 
@@ -362,21 +359,21 @@ async def sum(itr: AnyIterable[T], start: Optional[T] = None) -> T:
 
 
 @overload
-def zip(__iter1: AnyIterable[T1]) -> AsyncIterator[Tuple[T1]]:  # pragma: no cover
+def zip(__iter1: AnyIterable[T1]) -> AsyncIterator[builtins.tuple[T1]]:  # pragma: no cover
     pass
 
 
 @overload
 def zip(
     __iter1: AnyIterable[T1], __iter2: AnyIterable[T2]
-) -> AsyncIterator[Tuple[T1, T2]]:  # pragma: no cover
+) -> AsyncIterator[builtins.tuple[T1, T2]]:  # pragma: no cover
     pass
 
 
 @overload
 def zip(
     __iter1: AnyIterable[T1], __iter2: AnyIterable[T2], __iter3: AnyIterable[T3]
-) -> AsyncIterator[Tuple[T1, T2, T3]]:  # pragma: no cover
+) -> AsyncIterator[builtins.tuple[T1, T2, T3]]:  # pragma: no cover
     pass
 
 
@@ -386,7 +383,7 @@ def zip(
     __iter2: AnyIterable[T2],
     __iter3: AnyIterable[T3],
     __iter4: AnyIterable[T4],
-) -> AsyncIterator[Tuple[T1, T2, T3, T4]]:  # pragma: no cover
+) -> AsyncIterator[builtins.tuple[T1, T2, T3, T4]]:  # pragma: no cover
     pass
 
 
@@ -397,7 +394,7 @@ def zip(
     __iter3: AnyIterable[T3],
     __iter4: AnyIterable[T4],
     __iter5: AnyIterable[T5],
-) -> AsyncIterator[Tuple[T1, T2, T3, T4, T5]]:  # pragma: no cover
+) -> AsyncIterator[builtins.tuple[T1, T2, T3, T4, T5]]:  # pragma: no cover
     pass
 
 
@@ -410,11 +407,11 @@ def zip(
     __iter5: AnyIterable[Any],
     __iter6: AnyIterable[Any],
     *__iterables: AnyIterable[Any],
-) -> AsyncIterator[Tuple[Any, ...]]:  # pragma: no cover
+) -> AsyncIterator[builtins.tuple[Any, ...]]:  # pragma: no cover
     pass
 
 
-async def zip(*itrs: AnyIterable[Any]) -> AsyncIterator[Tuple[Any, ...]]:
+async def zip(*itrs: AnyIterable[Any]) -> AsyncIterator[builtins.tuple[Any, ...]]:
     """
     Yield a tuple of items from mixed iterables until the shortest is consumed.
 
@@ -424,7 +421,7 @@ async def zip(*itrs: AnyIterable[Any]) -> AsyncIterator[Tuple[Any, ...]]:
             ...
 
     """
-    its: List[AsyncIterator[Any]] = [iter(itr) for itr in itrs]
+    its: builtins.list[AsyncIterator[Any]] = [iter(itr) for itr in itrs]
 
     while True:
         values = await asyncio.gather(
