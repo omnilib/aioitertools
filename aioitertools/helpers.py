@@ -2,16 +2,11 @@
 # Licensed under the MIT license
 
 import inspect
-import sys
-from typing import Union
 from collections.abc import Awaitable
 
-from .types import T
+from typing import Protocol, Union
 
-if sys.version_info < (3, 8):  # pragma: no cover
-    from typing_extensions import Protocol
-else:  # pragma: no cover
-    from typing import Protocol
+from .types import T
 
 
 class Orderable(Protocol):  # pragma: no cover
