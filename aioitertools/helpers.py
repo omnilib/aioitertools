@@ -3,7 +3,8 @@
 
 import inspect
 import sys
-from typing import Awaitable, Union
+from typing import Union
+from collections.abc import Awaitable
 
 from .types import T
 

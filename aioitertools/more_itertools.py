@@ -2,7 +2,8 @@
 # Licensed under the MIT license
 
 import asyncio
-from typing import AsyncIterable, List, Tuple, TypeVar
+from typing import List, Tuple, TypeVar
+from collections.abc import AsyncIterable
 
 from aioitertools.helpers import maybe_await
 

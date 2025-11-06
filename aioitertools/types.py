@@ -4,15 +4,11 @@
 import sys
 
 from typing import (
-    AsyncIterable,
-    AsyncIterator,
-    Awaitable,
     Callable,
-    Iterable,
-    Iterator,
     TypeVar,
     Union,
 )
+from collections.abc import AsyncIterable, AsyncIterator, Awaitable, Iterable, Iterator
 
 if sys.version_info < (3, 10):  # pragma: no cover
     from typing_extensions import ParamSpec

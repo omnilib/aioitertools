@@ -16,11 +16,8 @@ import builtins
 from enum import Enum
 from typing import (
     Any,
-    AsyncIterable,
-    AsyncIterator,
     Callable,
     cast,
-    Iterable,
     List,
     Optional,
     overload,
@@ -28,6 +25,7 @@ from typing import (
     Tuple,
     Union,
 )
+from collections.abc import AsyncIterable, AsyncIterator, Iterable
 
 from . import asyncio as ait_asyncio
 from .helpers import maybe_await, Orderable
