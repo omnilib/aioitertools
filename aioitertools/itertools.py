@@ -502,7 +502,7 @@ def tee(itr: AnyIterable[T], n: int = 2) -> builtins.tuple[AsyncIterator[T], ...
     The first iterator lazily fetches from the original iterable, and then
     queues the values for the other iterators to yield when needed.
 
-    Caveat: all iterators are dependent on the first iterator – if it is
+    Caveat: all iterators are dependent on the first iterator — if it is
     consumed more slowly than the rest, the other consumers will be blocked
     until the first iterator continues forward.  Similarly, if the first
     iterator is consumed more quickly than the rest, more memory will be
