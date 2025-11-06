@@ -62,7 +62,7 @@ html_theme = "alabaster"
 html_theme_options = {
     "description": "itertools and more for AsyncIO",
     "fixed_sidebar": True,
-    "badge_branch": "master",
+    "badge_branch": "main",
     "github_button": False,
     "github_user": "omnilib",
     "github_repo": "aioitertools",
