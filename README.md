@@ -12,7 +12,7 @@ Implementation of itertools, builtins, and more for AsyncIO and mixed-type itera
 Install
 -------
 
-aioitertools requires Python 3.8 or newer.
+aioitertools requires Python 3.9 or newer.
 You can install it from PyPI:
 
 ```sh

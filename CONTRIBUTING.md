@@ -2,23 +2,27 @@
 
 ## Preparation
 
-You'll need to have Python 3.8 or newer available for testing.
-I recommend using [pyenv][] for this:
+aioitertools uses [uv][] to manage environments and dependencies, and `make`
+to run tests and linters.
+
+You'll need to have Python 3.9 or newer available for testing:
 
 ```sh
-$ pyenv install 3.12
-$ pyenv shell 3.12
+$ uv python pin 3.14
 ```
 
-## Setup
+## Testing
 
-Create a fresh development enviroment, and install the
-appropriate tools and dependencies:
+Run the test suite:
 
-```sh
-$ cd <path/to/aioitertools>
-$ make venv
-$ source .venv/bin/activate
+```shell-session
+$ make test
+```
+
+Run the linters:
+
+```shell-session
+$ make lint
 ```
 
 ## Submitting
@@ -32,4 +36,4 @@ that you have done the following:
 * Used `make format` to format code appropriately
 * Validated and tested code with `make test lint`
 
-[pyenv]: https://github.com/pyenv/pyenv
+[uv]: https://docs.astral.sh/uv/
