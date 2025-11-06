@@ -2,13 +2,9 @@
 # Licensed under the MIT license
 
 import sys
-
-from typing import (
-    Callable,
-    TypeVar,
-    Union,
-)
 from collections.abc import AsyncIterable, AsyncIterator, Awaitable, Iterable, Iterator
+
+from typing import Callable, TypeVar, Union
 
 if sys.version_info < (3, 10):  # pragma: no cover
     from typing_extensions import ParamSpec

@@ -17,8 +17,8 @@ import asyncio
 import builtins
 import itertools
 import operator
-from typing import Any, Optional, overload
 from collections.abc import AsyncIterator
+from typing import Any, Optional, overload
 
 from .builtins import enumerate, iter, list, next, tuple, zip
 from .helpers import maybe_await
@@ -120,7 +120,9 @@ class Chain:
 chain = Chain()
 
 
-async def combinations(itr: AnyIterable[T], r: int) -> AsyncIterator[builtins.tuple[T, ...]]:
+async def combinations(
+    itr: AnyIterable[T], r: int
+) -> AsyncIterator[builtins.tuple[T, ...]]:
     """
     Yield r length subsequences from the given iterable.
 
@@ -265,7 +267,9 @@ async def filterfalse(
 
 
 @overload
-def groupby(itr: AnyIterable[T]) -> AsyncIterator[builtins.tuple[T, builtins.list[T]]]:  # pragma: nocover
+def groupby(
+    itr: AnyIterable[T],
+) -> AsyncIterator[builtins.tuple[T, builtins.list[T]]]:  # pragma: nocover
     pass
 
 
@@ -423,6 +427,7 @@ async def product(
 
     """
     pools = await asyncio.gather(*[list(itr) for itr in itrs])
+    value: builtins.tuple[T, ...]
     for value in itertools.product(*pools, repeat=repeat):
         yield value
 

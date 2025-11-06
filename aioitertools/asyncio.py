@@ -9,12 +9,8 @@ Provisional library.  Must be imported as `aioitertools.asyncio`.
 
 import asyncio
 import time
-from typing import (
-    Any,
-    cast,
-    Optional,
-)
 from collections.abc import AsyncGenerator, AsyncIterable, Awaitable, Iterable
+from typing import Any, cast, Optional
 
 from .builtins import iter as aiter, maybe_await
 from .types import AnyIterable, AsyncIterator, MaybeAwaitable, T

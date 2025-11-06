@@ -13,16 +13,9 @@ use with `await`, `async for`, etc.
 
 import asyncio
 import builtins
-from enum import Enum
-from typing import (
-    Any,
-    Callable,
-    cast,
-    Optional,
-    overload,
-    Union,
-)
 from collections.abc import AsyncIterable, AsyncIterator, Iterable
+from enum import Enum
+from typing import Any, Callable, cast, Optional, overload, Union
 
 from . import asyncio as ait_asyncio
 from .helpers import maybe_await, Orderable
@@ -145,7 +138,7 @@ async def next(
         return default
 
 
-async def list(itr: AnyIterable[T]) -> list[T]:
+async def list(itr: AnyIterable[T]) -> builtins.list[T]:
     """
     Consume a mixed iterable and return a list of items in order.
 
@@ -158,7 +151,7 @@ async def list(itr: AnyIterable[T]) -> list[T]:
     return [item async for item in iter(itr)]
 
 
-async def tuple(itr: AnyIterable[T]) -> tuple[T, ...]:
+async def tuple(itr: AnyIterable[T]) -> builtins.tuple[T, ...]:
     """
     Consume a mixed iterable and return a tuple of items in order.
 
@@ -172,7 +165,7 @@ async def tuple(itr: AnyIterable[T]) -> tuple[T, ...]:
     return builtins.tuple(await list(itr))
 
 
-async def set(itr: AnyIterable[T]) -> set[T]:
+async def set(itr: AnyIterable[T]) -> builtins.set[T]:
     """
     Consume a mixed iterable and return a set of items.
 
@@ -359,7 +352,9 @@ async def sum(itr: AnyIterable[T], start: Optional[T] = None) -> T:
 
 
 @overload
-def zip(__iter1: AnyIterable[T1]) -> AsyncIterator[builtins.tuple[T1]]:  # pragma: no cover
+def zip(
+    __iter1: AnyIterable[T1],
+) -> AsyncIterator[builtins.tuple[T1]]:  # pragma: no cover
     pass
 
 

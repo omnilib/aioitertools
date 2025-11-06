@@ -2,8 +2,8 @@
 # Licensed under the MIT license
 
 import asyncio
-from typing import TypeVar
 from collections.abc import AsyncIterable
+from typing import TypeVar
 
 from aioitertools.helpers import maybe_await
 
