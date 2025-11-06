@@ -9,6 +9,9 @@ lint:
 	uv run ruff check $(PKG)
 	uv run ufmt check $(PKG)
 
+fix:
+	uv run ruff check --fix --unsafe-fixes $(PKG)
+
 test:
 	uv run coverage run -m $(PKG).tests
 	uv run coverage report
