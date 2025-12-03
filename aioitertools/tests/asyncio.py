@@ -66,6 +66,31 @@ class AsyncioTest(TestCase):
         self.assertListEqual(sorted(expected), sorted(results))
 
     @async_test
+    async def test_as_generated_no_iterables(self):
+        gens = []
+        expected = []
+        results = []
+        async for value in aio.as_generated(gens):
+            results.append(value)
+        self.assertEqual(0, len(results))
+        self.assertListEqual(sorted(expected), sorted(results))
+
+    @async_test
+    async def test_as_generated_empty_iterables(self):
+        async def gen(stop):
+            for i in range(stop):
+                yield i
+                await asyncio.sleep(0)
+
+        gens = [gen(0), gen(1), gen(2)]
+        expected = [0, 0, 1]
+        results = []
+        async for value in aio.as_generated(gens):
+            results.append(value)
+        self.assertEqual(3, len(results))
+        self.assertListEqual(sorted(expected), sorted(results))
+
+    @async_test
     async def test_as_generated_exception(self):
         async def gen1():
             for i in range(3):
