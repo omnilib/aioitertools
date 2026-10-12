@@ -72,6 +72,12 @@ async for value in islice(generator1(), 2, None, 2):
 ```
 
 
+The provisional `aioitertools.asyncio.gather` supports limiting concurrency.
+With `return_exceptions=True`, cancelled inputs are returned as
+`asyncio.CancelledError` instances alongside the other results. Cancelling
+`gather` itself still cancels its pending tasks and propagates cancellation.
+
+
 See [builtins.py][], [itertools.py][], and [more_itertools.py][] for full
 documentation of functions and abilities.
 

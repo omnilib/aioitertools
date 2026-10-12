@@ -228,6 +228,72 @@ class AsyncioTest(TestCase):
         self.assertIsInstance(result[0], MyException)
 
     @async_test
+    async def test_gather_cancelled_future_return_exceptions(self):
+        for limit in (-1, 1, 2):
+            with self.subTest(limit=limit):
+                cancelled = asyncio.get_running_loop().create_future()
+                cancelled.cancel("cancelled input")
+                other = asyncio.sleep(0, result=42)
+                try:
+                    result = await aio.gather(
+                        cancelled, other, cancelled, return_exceptions=True, limit=limit
+                    )
+                finally:
+                    other.close()
+
+                self.assertEqual(len(result), 3)
+                self.assertIsInstance(result[0], asyncio.CancelledError)
+                self.assertEqual(str(result[0]), "cancelled input")
+                self.assertEqual(result[1], 42)
+                self.assertIs(result[0], result[2])
+
+    @async_test
+    async def test_gather_cancelled_task_return_exceptions(self):
+        async def cancel():
+            await asyncio.sleep(0)
+            raise asyncio.CancelledError("self cancellation")
+
+        async def complete():
+            await asyncio.sleep(0)
+            await asyncio.sleep(0)
+            return 42
+
+        for limit in (-1, 1, 2):
+            with self.subTest(limit=limit):
+                cancelled = cancel()
+                other = complete()
+                try:
+                    result = await aio.gather(
+                        cancelled, other, return_exceptions=True, limit=limit
+                    )
+                finally:
+                    cancelled.close()
+                    other.close()
+
+                self.assertIsInstance(result[0], asyncio.CancelledError)
+                self.assertEqual(str(result[0]), "self cancellation")
+                self.assertEqual(result[1], 42)
+
+    @async_test
+    async def test_gather_cancel_with_return_exceptions(self):
+        started = asyncio.Event()
+        cancelled = asyncio.Event()
+
+        async def wait():
+            try:
+                started.set()
+                await asyncio.Event().wait()
+            finally:
+                cancelled.set()
+
+        task = asyncio.create_task(aio.gather(wait(), return_exceptions=True))
+        await started.wait()
+        task.cancel()
+        with self.assertRaises(asyncio.CancelledError):
+            await task
+        self.assertTrue(cancelled.is_set())
+
+    @async_test
     async def test_gather_cancel(self):
         cancelled = False
         started = False
