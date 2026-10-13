@@ -213,7 +213,7 @@ async def cycle(itr: AnyIterable[T]) -> AsyncIterator[T]:
         yield item
         items.append(item)
 
-    while True:
+    while items:
         for item in items:
             yield item
 

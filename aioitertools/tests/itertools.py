@@ -222,15 +222,37 @@ class ItertoolsTest(TestCase):
             self.assertEqual(await ait.next(it), k)
 
     @async_test
-    async def test_cycle_gen(self):
+    async def test_cycle_empty(self):
+        self.assertEqual(await ait.list(ait.cycle([])), [])
+
+    @async_test
+    async def test_cycle_exhausted_iterator(self):
+        source = iter([1])
+        next(source)
+        self.assertEqual(await ait.list(ait.cycle(source)), [])
+
+    @async_test
+    async def test_cycle_empty_gen(self):
         async def gen():
-            yield 1
-            yield 2
-            yield 42
+            for item in []:
+                yield item
+
+        self.assertEqual(await ait.list(ait.cycle(gen())), [])
+
+    @async_test
+    async def test_cycle_gen(self):
+        consumed = []
+
+        async def gen():
+            for item in [1, 2, 42]:
+                consumed.append(item)
+                yield item
 
         it = ait.cycle(gen())
-        for k in [1, 2, 42, 1, 2, 42, 1, 2]:
+        self.assertEqual(consumed, [])
+        for index, k in enumerate([1, 2, 42, 1, 2, 42, 1, 2]):
             self.assertEqual(await ait.next(it), k)
+            self.assertEqual(consumed, [1, 2, 42][: index + 1])
 
     @async_test
     async def test_dropwhile_empty(self):
