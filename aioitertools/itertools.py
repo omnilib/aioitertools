@@ -499,15 +499,14 @@ def tee(itr: AnyIterable[T], n: int = 2) -> builtins.tuple[AsyncIterator[T], ...
     """
     Return n iterators that each yield items from the given iterable.
 
-    The first iterator lazily fetches from the original iterable, and then
-    queues the values for the other iterators to yield when needed.
+    Values are fetched lazily from the original iterable by whichever iterator
+    needs the next value first, and then queued for the other iterators to
+    yield when needed.  No iterator depends on any other: each consumer can
+    advance at its own pace, and slower consumers will never block faster ones.
 
-    Caveat: all iterators are dependent on the first iterator — if it is
-    consumed more slowly than the rest, the other consumers will be blocked
-    until the first iterator continues forward.  Similarly, if the first
-    iterator is consumed more quickly than the rest, more memory will be
-    used in keeping values in the queues until the other iterators finish
-    consuming them.
+    Caveat: if one iterator is consumed much more quickly than the rest, more
+    memory will be used in keeping values in the queues until the other
+    iterators finish consuming them.
 
     Example::
 
@@ -523,31 +522,44 @@ def tee(itr: AnyIterable[T], n: int = 2) -> builtins.tuple[AsyncIterator[T], ...
     assert n > 0
     sentinel = object()
     queues: builtins.list[asyncio.Queue] = [asyncio.Queue() for k in range(n)]
+    lock = asyncio.Lock()
+    source: Optional[AsyncIterator[T]] = None
+    finished = False
 
-    async def gen(k: int, q: asyncio.Queue) -> AsyncIterator[T]:
-        if k == 0:
-            try:
-                async for value in iter(itr):
-                    await asyncio.gather(
-                        *[queue.put((None, value)) for queue in queues[1:]]
-                    )
-                    yield value
-            except Exception as e:
-                await asyncio.gather(*[queue.put((e, None)) for queue in queues[1:]])
-                raise
+    def broadcast(item: builtins.tuple[Optional[BaseException], Any]) -> None:
+        for queue in queues:
+            queue.put_nowait(item)
 
-            await asyncio.gather(*[queue.put((None, sentinel)) for queue in queues[1:]])
-
+    async def fetch() -> None:
+        nonlocal source, finished
+        try:
+            if source is None:
+                source = iter(itr)
+            value = await source.__anext__()
+        except StopAsyncIteration:
+            finished = True
+            broadcast((None, sentinel))
+        except Exception as e:
+            finished = True
+            broadcast((e, None))
         else:
-            while True:
-                error, value = await q.get()
-                if error is not None:
-                    raise error
-                if value is sentinel:
-                    break
-                yield value
+            broadcast((None, value))
 
-    return builtins.tuple(gen(k, q) for k, q in builtins.enumerate(queues))
+    async def gen(q: asyncio.Queue) -> AsyncIterator[T]:
+        while True:
+            if q.empty():
+                async with lock:
+                    # another iterator may have fetched while we waited
+                    if q.empty() and not finished:
+                        await fetch()
+            error, value = q.get_nowait()
+            if error is not None:
+                raise error
+            if value is sentinel:
+                break
+            yield value
+
+    return builtins.tuple(gen(q) for q in queues)
 
 
 async def zip_longest(

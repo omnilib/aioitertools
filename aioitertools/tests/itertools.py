@@ -743,6 +743,60 @@ class ItertoolsTest(TestCase):
             self.assertIsInstance(value, MyError)
 
     @async_test
+    async def test_tee_consume_any_order(self):
+        it1, it2, it3 = ait.tee(slist, n=3)
+
+        # later iterators no longer wait on the first one
+        self.assertEqual(await ait.list(it3), slist)
+        self.assertEqual(await ait.list(it2), slist)
+        self.assertEqual(await ait.list(it1), slist)
+
+    @async_test
+    async def test_tee_fetches_each_value_once(self):
+        fetched = []
+
+        async def gen():
+            for k in range(5):
+                fetched.append(k)
+                await asyncio.sleep(0)
+                yield k
+
+        itrs = ait.tee(gen(), n=4)
+        self.assertEqual(fetched, [])  # lazy until first consumed
+
+        results = await asyncio.gather(*[ait.list(it) for it in itrs])
+        self.assertEqual(results, [list(range(5))] * 4)
+        self.assertEqual(fetched, list(range(5)))
+
+    @async_test
+    async def test_tee_unbalanced_consumers(self):
+        async def gen():
+            for k in range(10):
+                await asyncio.sleep(0.001)
+                yield k
+
+        async def consumer(it, delay):
+            result = []
+            async for item in it:
+                result.append(item)
+                await asyncio.sleep(delay)
+            return result
+
+        it1, it2 = ait.tee(gen())
+        slow, fast = await asyncio.gather(consumer(it1, 0.005), consumer(it2, 0))
+        self.assertEqual(slow, list(range(10)))
+        self.assertEqual(fast, list(range(10)))
+
+    @async_test
+    async def test_tee_slow_first_does_not_block(self):
+        it1, it2 = ait.tee(slist)
+        await ait.next(it1)
+
+        # second iterator can finish while the first is left idle
+        self.assertEqual(await asyncio.wait_for(ait.list(it2), 1), slist)
+        self.assertEqual(await ait.list(it1), slist[1:])
+
+    @async_test
     async def test_zip_longest_range(self):
         a = range(3)
         b = range(5)
