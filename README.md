@@ -49,6 +49,15 @@ async for a, b in zip(something, something_else):
     ...
 ```
 
+Calling `zip()` without any iterables returns an empty async iterator, just like
+the built-in `zip()`:
+
+```python
+from aioitertools import list, zip
+
+assert await list(zip()) == []
+```
+
 
 aioitertools emulates the entire `itertools` module, offering the same
 function signatures, but as async generators.  All functions support

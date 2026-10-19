@@ -352,6 +352,11 @@ async def sum(itr: AnyIterable[T], start: Optional[T] = None) -> T:
 
 
 @overload
+def zip() -> AsyncIterator[builtins.tuple[()]]:  # pragma: no cover
+    pass
+
+
+@overload
 def zip(
     __iter1: AnyIterable[T1],
 ) -> AsyncIterator[builtins.tuple[T1]]:  # pragma: no cover
@@ -418,7 +423,7 @@ async def zip(*itrs: AnyIterable[Any]) -> AsyncIterator[builtins.tuple[Any, ...]
     """
     its: builtins.list[AsyncIterator[Any]] = [iter(itr) for itr in itrs]
 
-    while True:
+    while its:
         values = await asyncio.gather(
             *[it.__anext__() for it in its], return_exceptions=True
         )

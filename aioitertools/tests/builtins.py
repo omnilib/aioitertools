@@ -363,6 +363,12 @@ class BuiltinsTest(TestCase):
             idx += 1
 
     @async_test
+    async def test_zip_no_iterables(self):
+        iterator = ait.zip()
+        with self.assertRaises(StopAsyncIteration):
+            await iterator.__anext__()
+
+    @async_test
     async def test_zip_shortest(self):
         short = ["a", "b", "c"]
         long = [0, 1, 2, 3, 5]
