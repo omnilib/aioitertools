@@ -88,3 +88,10 @@ my code is from me and not from my employer. See the `LICENSE` file for details.
 [builtins.py]: https://github.com/omnilib/aioitertools/blob/main/aioitertools/builtins.py
 [itertools.py]: https://github.com/omnilib/aioitertools/blob/main/aioitertools/itertools.py
 [more_itertools.py]: https://github.com/omnilib/aioitertools/blob/main/aioitertools/more_itertools.py
+
+### Bounded concurrent gathering
+
+`aioitertools.asyncio.gather(*awaitables, limit=2, return_exceptions=True)`
+collects cancelled inputs as `asyncio.CancelledError` results and lets the other
+inputs finish. Cancelling the enclosing gather still cancels and waits for its
+pending tasks. Results retain their input order, including duplicate inputs.

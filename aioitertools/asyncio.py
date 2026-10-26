@@ -165,7 +165,9 @@ async def gather(
     """
     Like asyncio.gather but with a limit on concurrency.
 
-    Note that all results are buffered.
+    Note that all results are buffered. With ``return_exceptions=True``,
+    cancelled inputs are returned as ``CancelledError`` results without
+    cancelling the other inputs.
 
     If gather is cancelled all tasks that were internally created and still pending
     will be cancelled as well.
@@ -214,7 +216,12 @@ async def gather(
                     pending, return_when=asyncio.FIRST_COMPLETED
                 )
                 for x in done:
-                    if return_exceptions and x.exception():
+                    if return_exceptions and x.cancelled():
+                        try:
+                            x.result()
+                        except asyncio.CancelledError as exc:
+                            ret[pos[x]] = exc
+                    elif return_exceptions and x.exception():
                         ret[pos[x]] = x.exception()
                     else:
                         ret[pos[x]] = x.result()
