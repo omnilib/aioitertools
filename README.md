@@ -72,6 +72,10 @@ async for value in islice(generator1(), 2, None, 2):
 ```
 
 
+`aioitertools.asyncio.as_completed` measures its timeout with a monotonic clock,
+so adjustments to the system clock do not change the time available to finish.
+
+
 See [builtins.py][], [itertools.py][], and [more_itertools.py][] for full
 documentation of functions and abilities.
 

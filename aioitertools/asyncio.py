@@ -41,13 +41,13 @@ async def as_completed(
     remaining: Optional[float] = None
 
     if timeout and timeout > 0:
-        threshold = time.time() + timeout
+        threshold = time.monotonic() + timeout
     else:
         timeout = None
 
     while pending:
         if timeout:
-            remaining = threshold - time.time()
+            remaining = threshold - time.monotonic()
             if remaining <= 0:
                 for fut in pending:
                     if isinstance(fut, asyncio.Future):

@@ -2,7 +2,8 @@
 # Licensed under the MIT license
 
 import asyncio
-from unittest import TestCase
+import time
+from unittest import mock, TestCase
 
 import aioitertools as ait
 import aioitertools.asyncio as aio
@@ -34,6 +35,22 @@ class AsyncioTest(TestCase):
         async for value in aio.as_completed(futures):
             results.append(value)
         self.assertEqual(results, expected)
+
+    @async_test
+    async def test_as_completed_wall_clock_jump(self):
+        async def ready():
+            return "ready"
+
+        task = asyncio.ensure_future(ready())
+        try:
+            with mock.patch.object(aio, "time", wraps=time) as clock:
+                # A system clock correction must not expire an elapsed timeout.
+                clock.time.side_effect = [0.0, 3600.0]
+                results = await ait.list(aio.as_completed([task], timeout=60))
+            self.assertEqual(results, ["ready"])
+        finally:
+            task.cancel()
+            await asyncio.gather(task, return_exceptions=True)
 
     @async_test
     async def test_as_completed_timeout(self):
