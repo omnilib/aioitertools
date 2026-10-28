@@ -788,3 +788,70 @@ class ItertoolsTest(TestCase):
             self.assertEqual(await ait.next(it), k)
         with self.assertRaisesRegex(Exception, "fake error"):
             await ait.next(it)
+
+    @async_test
+    async def test_zip_longest_exception_values(self):
+        values = [
+            ValueError("data"),
+            StopIteration("data"),
+            StopAsyncIteration("data"),
+            asyncio.CancelledError("data"),
+            KeyboardInterrupt("data"),
+            SystemExit("data"),
+        ]
+
+        async def gen():
+            for value in values:
+                yield value
+
+        for iterable in (values, gen()):
+            with self.subTest(iterable=type(iterable)):
+                result = await ait.list(ait.zip_longest(iterable, range(len(values))))
+                self.assertEqual(len(result), len(values))
+                for index, value in enumerate(values):
+                    self.assertIs(result[index][0], value)
+                    self.assertEqual(result[index][1], index)
+
+    @async_test
+    async def test_zip_longest_exception_fillvalue(self):
+        for fillvalue in (ValueError("fill"), StopAsyncIteration("fill")):
+            with self.subTest(fillvalue=type(fillvalue)):
+                result = await ait.list(
+                    ait.zip_longest([], range(3), fillvalue=fillvalue)
+                )
+                self.assertEqual(len(result), 3)
+                for index, pair in enumerate(result):
+                    self.assertIs(pair[0], fillvalue)
+                    self.assertEqual(pair[1], index)
+
+    @async_test
+    async def test_zip_longest_raised_cancelled_error(self):
+        async def gen():
+            yield 1
+            raise asyncio.CancelledError("cancelled")
+
+        it = ait.zip_longest(gen(), [2, 3])
+        self.assertEqual(await ait.next(it), (1, 2))
+        with self.assertRaises(asyncio.CancelledError):
+            await ait.next(it)
+
+    @async_test
+    async def test_zip_longest_outer_cancellation(self):
+        started = asyncio.Event()
+        cleaned_up = asyncio.Event()
+
+        async def gen():
+            try:
+                started.set()
+                await asyncio.Event().wait()
+                yield 1
+            finally:
+                cleaned_up.set()
+
+        it = ait.zip_longest(gen(), [2])
+        pending = asyncio.create_task(ait.next(it))
+        await started.wait()
+        pending.cancel()
+        with self.assertRaises(asyncio.CancelledError):
+            await pending
+        self.assertTrue(cleaned_up.is_set())

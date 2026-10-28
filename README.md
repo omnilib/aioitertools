@@ -76,6 +76,10 @@ See [builtins.py][], [itertools.py][], and [more_itertools.py][] for full
 documentation of functions and abilities.
 
 
+`zip_longest` preserves exception objects yielded as data or supplied as
+`fillvalue`. Exceptions raised by an input iterator still propagate to the caller.
+
+
 License
 -------
 

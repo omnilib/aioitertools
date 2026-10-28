@@ -569,13 +569,18 @@ async def zip_longest(
             b  # 0, 1, 2,  3,  4
 
     """
+
+    async def wrapped_next(itr: AsyncIterator[Any]) -> builtins.tuple[Any]:
+        # Keep yielded exceptions distinct from failures returned by gather.
+        return (await itr.__anext__(),)
+
     its: builtins.list[AsyncIterator[Any]] = [iter(itr) for itr in itrs]
     itr_count = len(its)
     finished = 0
 
     while True:
         values = await asyncio.gather(
-            *[it.__anext__() for it in its], return_exceptions=True
+            *[wrapped_next(it) for it in its], return_exceptions=True
         )
         for idx, value in builtins.enumerate(values):
             if isinstance(value, AnyStop):
@@ -584,6 +589,8 @@ async def zip_longest(
                 its[idx] = repeat(fillvalue)
             elif isinstance(value, BaseException):
                 raise value
+            else:
+                values[idx] = value[0]
         if finished >= itr_count:
             break
         yield builtins.tuple(values)
